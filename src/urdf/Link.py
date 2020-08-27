@@ -5,27 +5,43 @@ class Link:
     def __init__(self, link_name):
         self.link_name = link_name
         # Naming rule: concaten tag name as the variable name, and attribute name as the key
-        self.has_visual = False
-        self.visual_origin = {"xyz": np.array([0, 0, 0]), "rpy": np.array([0, 0, 0])}
-        self.visual_geometry_mesh = {"filename": None}
+        self.visuals = []
+
+    def hasVisual(self):
+        if len(self.visuals) == 0:
+            return False
+        return True
+
+    def addVisual(self, visual_name=None):
+        self.visuals.append(Visual(visual_name))
 
     def setVisualOriginXyz(self, xyz):
-        self.has_visual = True
-        self.visual_origin["xyz"] = np.array(xyz)
+        current_visual = len(self.visuals) - 1
+        self.visuals[current_visual].origin["xyz"] = np.array(xyz)
 
     def setVisualOriginRpy(self, rpy):
-        self.has_visual = True
-        self.visual_origin["rpy"] = np.array(rpy)
+        current_visual = len(self.visuals) - 1
+        self.visuals[current_visual].origin["rpy"] = np.array(rpy)
 
     def setVisualGeometryMeshFilename(self, filename):
-        self.has_visual = True
-        self.visual_geometry_mesh["filename"] = filename
+        current_visual = len(self.visuals) - 1
+        self.visuals[current_visual].geometry_mesh["filename"] = filename
 
     def __repr__(self):
         output = {}
         output["name"] = self.link_name
-        output["has_visual"] = self.has_visual
-        output["origin"] = self.visual_origin
-        output["filename"] = self.visual_geometry_mesh["filename"]
+        output["visual"] = self.visuals
+        return str(output)
 
+
+class Visual:
+    def __init__(self, visual_name=None):
+        self.visual_name = visual_name
+        self.origin = {"xyz": np.array([0, 0, 0]), "rpy": np.array([0, 0, 0])}
+        self.geometry_mesh = {"filename": None}
+
+    def __repr__(self):
+        output = {}
+        output["origin"] = self.origin
+        output["mesh"] = self.geometry_mesh["filename"]
         return str(output)

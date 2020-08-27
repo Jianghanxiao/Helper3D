@@ -30,9 +30,15 @@ class URDFParser:
         for link_xml in self.links_xml:
             link_name = link_xml.attrib["name"]
             link = Link(link_name)
-            # Deal with the visual part
-            visual_xml = link_xml.find("visual")
-            if visual_xml != None:
+            # Deal with multiple visuals
+            visuals_xml = link_xml.findall("visual")
+            for visual_xml in visuals_xml:
+                # Add new visual in link
+                if 'name' in visual_xml.attrib:
+                    visual_name = visual_xml.attrib['name']
+                else:
+                    visual_name = None
+                link.addVisual(visual_name)
                 # Get origin
                 origin_xml = visual_xml.find("origin")
                 if origin_xml != None:
@@ -89,5 +95,5 @@ if __name__ == "__main__":
     parser = URDFParser(file_name)
     parser.parse()
 
-    for i in parser.joints:
-        print(parser.joints[i])
+    for i in parser.links:
+        print(parser.links[i])
