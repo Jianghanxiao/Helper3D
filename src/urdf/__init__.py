@@ -1,1 +1,2 @@
-from URDFParser import URDFParser
+from Parser import URDFParser
+from URDFTree import URDFTree
