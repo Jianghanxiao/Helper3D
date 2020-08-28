@@ -4,7 +4,7 @@ from src import (
 )
 
 if __name__ == "__main__":
-    URDF_file = "../../data/43074/mobility.urdf"
+    URDF_file = "data/43074/mobility.urdf"
     # Parse the URDF file
     parser = URDFParser(URDF_file)
     parser.parse()
@@ -12,3 +12,5 @@ if __name__ == "__main__":
     links = parser.links
     joints = parser.joints
     
+    tree = URDFTree(links, joints)
+    print(tree.root.children[0])

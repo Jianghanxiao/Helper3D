@@ -1,2 +1,2 @@
-from  URDFParser import URDFParser
-from Link import Link
+from .URDFParser import URDFParser
+from .Link import Link

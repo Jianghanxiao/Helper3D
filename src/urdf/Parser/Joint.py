@@ -2,11 +2,11 @@ import numpy as np
 
 
 class Joint:
-    def __init__(self, joint_name, joint_type, child, parent):
+    def __init__(self, joint_name, joint_type, child_name, parent_name):
         self.joint_name = joint_name
         self.joint_type = joint_type
-        self.child = child
-        self.parent = parent
+        self.child_name = child_name
+        self.parent_name = parent_name
         # Naming rule: concaten tag name as the variable name, and attribute name as the key
         # If the tag just has one attribute, ignore the dictionary
         self.origin = {"xyz": np.array([0, 0, 0]), "rpy": np.array([0, 0, 0])}
@@ -32,8 +32,8 @@ class Joint:
         output = {}
         output["name"] = self.joint_name
         output["type"] = self.joint_type
-        output["child_name"] = self.child.link_name
-        output["parent_name"] = self.parent.link_name
+        output["child_name"] = self.child_name
+        output["parent_name"] = self.parent_name
         output["origin"] = self.origin
         output["axis"] = self.axis
         output["limit"] = self.limit

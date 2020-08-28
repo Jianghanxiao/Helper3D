@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ET
 import numpy as np
-from Link import Link
-from Joint import Joint
+from .Link import Link
+from .Joint import Joint
 
 
 def parseThreeNumber(string):
@@ -64,7 +64,7 @@ class URDFParser:
             child_name = joint_xml.find("child").attrib["link"]
             parent_name = joint_xml.find("parent").attrib["link"]
             joint = Joint(
-                joint_name, joint_type, self.links[child_name], self.links[parent_name]
+                joint_name, joint_type, child_name, parent_name
             )
             # Get origin
             origin_xml = joint_xml.find("origin")
