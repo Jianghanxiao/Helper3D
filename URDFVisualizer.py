@@ -17,5 +17,5 @@ if __name__ == "__main__":
     # Construct the scene graph
     scene = SceneGraph(tree.root)
     mesh = scene.getMesh()
-    print(mesh)
+    mesh.paint_uniform_color([0.5, 0.5, 0.5])
     o3d.visualization.draw_geometries([mesh])
