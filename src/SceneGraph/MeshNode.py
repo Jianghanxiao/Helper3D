@@ -14,3 +14,6 @@ class MeshNode:
         # Read the mesh from obj file
         mesh = o3d.io.read_triangle_mesh(mesh_file)
         self.addMesh(mesh)
+
+    def getMesh(self, worldMatrix):
+        pass
