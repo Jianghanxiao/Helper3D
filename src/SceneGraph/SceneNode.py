@@ -1,10 +1,7 @@
 from .Transform import Transform
 from .MeshNode import MeshNode
 import numpy as np
-from pytransform3d.rotations import (
-    matrix_from_axis_angle,
-    matrix_from_angle,
-)
+import open3d as o3d
 
 
 class SceneNode:
@@ -19,8 +16,10 @@ class SceneNode:
             self.worldMatrix = np.dot(
                 self.parent.worldMatrix, self.localTransform.getMatrix()
             )
+        self._transformHelper = o3d.geomtry.TriangleMesh.create_coordinate_frame()
         # Store the mesh and deal with functions draw the mesh based on the transform
         self.meshNode = MeshNode()
+        self.joint = None
 
     def setParent(self, parent):
         if parent == None:
@@ -35,6 +34,9 @@ class SceneNode:
         self.worldMatrix = np.dot(
             self.parent.worldMatrix, self.localTransform.getMatrix()
         )
+        # Update all its children
+        for child in children:
+            child.update()
 
     def addChild(self, child):
         # child should also be SceneNode
@@ -63,39 +65,23 @@ class SceneNode:
             ]
         )
         self.localTransform.translateMat(transMat)
+        self.update()
 
     def rotate(self, axis, angle):
-        # axis is in array form: [float, float, float], angle is in rad form
-        array = np.zeros(4)
-        array[0:3] = axis
-        array[3] = angle
+        # Convert axis into 3*1 array
+        axis = axis / np.linalg.norm(axis)
+        axisAngle = axis * angle
         # matrix here is 3*3
-        matrix = matrix_from_axis_angle(array)
-        rotMat = np.zeros(4, 4)
-        rotMat[3, 3] = 1
+        matrix = self._transformHelper.get_rotation_matrix_from_axis_angle(axisAngle)
+        rotMat = np.eye(4)
         rotMat[0:3, 0:3] = matrix
         self.localTransform.rotateMat(rotMat)
+        self.update()
 
-    def rotateX(self, angle):
-        # matrix here is 3*3
-        matrix = matrix_from_angle(0, angle)
-        rotMat = np.zeros(4, 4)
-        rotMat[3, 3] = 1
+    def rotateXYZ(self, angle):
+        # angle should be in array form [float, float, float] in radius
+        matrix = self._transformHelper.get_rotation_matrix_from_xyz(angle)
+        rotMat = np.eye(4)
         rotMat[0:3, 0:3] = matrix
         self.localTransform.rotateMat(rotMat)
-
-    def rotateY(self, angle):
-        # matrix here is 3*3
-        matrix = matrix_from_angle(1, angle)
-        rotMat = np.zeros(4, 4)
-        rotMat[3, 3] = 1
-        rotMat[0:3, 0:3] = matrix
-        self.localTransform.rotateMat(rotMat)
-
-    def rotateZ(self, angle):
-        # matrix here is 3*3
-        matrix = matrix_from_angle(2, angle)
-        rotMat = np.zeros(4, 4)
-        rotMat[3, 3] = 1
-        rotMat[0:3, 0:3] = matrix
-        self.localTransform.rotateMat(rotMat)
+        self.update()

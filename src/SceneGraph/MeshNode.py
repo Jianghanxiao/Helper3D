@@ -1,4 +1,5 @@
 import open3d as o3d
+import copy
 class MeshNode:
     def __init__(self, mesh = None):
         self.mesh = mesh
@@ -16,4 +17,4 @@ class MeshNode:
         self.addMesh(mesh)
 
     def getMesh(self, worldMatrix):
-        pass
+        new_mesh = copy.deepcopy(self.mesh)
