@@ -18,3 +18,5 @@ class MeshNode:
 
     def getMesh(self, worldMatrix):
         new_mesh = copy.deepcopy(self.mesh)
+        new_mesh.transform(worldMatrix)
+        return new_mesh

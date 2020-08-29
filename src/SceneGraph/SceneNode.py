@@ -34,9 +34,6 @@ class SceneNode:
         self.worldMatrix = np.dot(
             self.parent.worldMatrix, self.localTransform.getMatrix()
         )
-        # Update all its children
-        for child in children:
-            child.update()
 
     def addChild(self, child):
         # child should also be SceneNode
@@ -65,7 +62,6 @@ class SceneNode:
             ]
         )
         self.localTransform.translateMat(transMat)
-        self.update()
 
     def rotate(self, axis, angle):
         # Convert axis into 3*1 array
@@ -76,7 +72,6 @@ class SceneNode:
         rotMat = np.eye(4)
         rotMat[0:3, 0:3] = matrix
         self.localTransform.rotateMat(rotMat)
-        self.update()
 
     def rotateXYZ(self, angle):
         # angle should be in array form [float, float, float] in radius
@@ -84,4 +79,3 @@ class SceneNode:
         rotMat = np.eye(4)
         rotMat[0:3, 0:3] = matrix
         self.localTransform.rotateMat(rotMat)
-        self.update()
