@@ -1,1 +1,1 @@
-from SceneGraph import SceneGraph
+from .SceneGraph import SceneGraph

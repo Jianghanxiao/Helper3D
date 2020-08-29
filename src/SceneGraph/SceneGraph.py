@@ -1,26 +1,27 @@
-from SceneNode import SceneNode
+from .SceneNode import SceneNode
 
 
 class SceneGraph:
     def __init__(self, rootLink):
         self.root = SceneNode()
-        self.constructNode(root, rootLink)
+        self.constructNode(self.root, rootLink)
 
     def update(self):
         self.root.update()
 
     def getMesh(self):
         self.update()
-        self.root.getMesh()
+        return self.root.getMesh()
 
     def constructNode(self, node, link):
         node.name = link.link.link_name
         node.joint = link.joint
-        # Construct the joint node firstly; Deal with xyz and rpy of the node
-        joint_xyz = node.joint.origin["xyz"]
-        joint_rpy = node.joint.origin["rpy"]
-        node.rotateXYZ(joint_rpy)
-        node.translate(joint_xyz)
+        if node.joint != None:
+            # Construct the joint node firstly; Deal with xyz and rpy of the node
+            joint_xyz = node.joint.origin["xyz"]
+            joint_rpy = node.joint.origin["rpy"]
+            node.rotateXYZ(joint_rpy)
+            node.translate(joint_xyz)
         # Construct the mesh nodes for multiple visuals in link
         visuals = link.link.visuals
         for visual in visuals:
@@ -40,5 +41,5 @@ class SceneGraph:
         for child in link.children:
             child_node = SceneNode(node)
             node.addChild(child_node)
-            constructNode(child_node, child)
+            self.constructNode(child_node, child)
 

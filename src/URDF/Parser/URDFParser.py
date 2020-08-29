@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
 import numpy as np
+import os
 from .Link import Link
 from .Joint import Joint
 
@@ -13,6 +14,7 @@ def parseThreeNumber(string):
 class URDFParser:
     def __init__(self, file_name):
         self.file_name = file_name
+        self._root_path = os.path.dirname(file_name) + "/"
         self.links = {}
         self.joints = {}
 
@@ -34,8 +36,8 @@ class URDFParser:
             visuals_xml = link_xml.findall("visual")
             for visual_xml in visuals_xml:
                 # Add new visual in link
-                if 'name' in visual_xml.attrib:
-                    visual_name = visual_xml.attrib['name']
+                if "name" in visual_xml.attrib:
+                    visual_name = visual_xml.attrib["name"]
                 else:
                     visual_name = None
                 link.addVisual(visual_name)
@@ -54,7 +56,7 @@ class URDFParser:
                     mesh_xml = geometry_xml.find("mesh")
                     if mesh_xml != None:
                         filename = mesh_xml.attrib["filename"]
-                        link.setVisualGeometryMeshFilename(filename)
+                        link.setVisualGeometryMeshFilename(self._root_path + filename)
             self.links[link_name] = link
 
     def parseJoints(self):
@@ -63,9 +65,7 @@ class URDFParser:
             joint_type = joint_xml.attrib["type"]
             child_name = joint_xml.find("child").attrib["link"]
             parent_name = joint_xml.find("parent").attrib["link"]
-            joint = Joint(
-                joint_name, joint_type, child_name, parent_name
-            )
+            joint = Joint(joint_name, joint_type, child_name, parent_name)
             # Get origin
             origin_xml = joint_xml.find("origin")
             if origin_xml != None:
@@ -88,6 +88,7 @@ class URDFParser:
                 joint.setLimitLower(lower)
                 joint.setLimitUpper(upper)
             self.joints[joint_name] = joint
+
 
 # Test the parser
 if __name__ == "__main__":

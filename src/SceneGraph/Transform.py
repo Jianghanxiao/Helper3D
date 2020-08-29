@@ -4,11 +4,11 @@ import numpy as np
 class Transform:
     # Only support matrix currently
     def __init__(self):
-        self._matrix = np.identity(4)
+        self._matrix = np.eye(4)
         # Matrix for calculating the latest matrix, the order will always be sclae -> rotate -> translate
-        self._transMat = np.identity(4)
-        self._rotMat = np.identity(4)
-        self._scaleMat = np.identtiy(4)
+        self._transMat = np.eye(4)
+        self._rotMat = np.eye(4)
+        self._scaleMat = np.eye(4)
     
     def getMatrix(self):
         self.updateMatrix()

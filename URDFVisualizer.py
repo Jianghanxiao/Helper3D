@@ -3,6 +3,7 @@ from src import (
     URDFTree,
     SceneGraph,
 )
+import open3d as o3d
 
 if __name__ == "__main__":
     URDF_file = "data/43074/mobility.urdf"
@@ -15,3 +16,6 @@ if __name__ == "__main__":
     tree = URDFTree(links, joints)
     # Construct the scene graph
     scene = SceneGraph(tree.root)
+    mesh = scene.getMesh()
+    print(mesh)
+    o3d.visualization.draw_geometries([mesh])

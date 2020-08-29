@@ -11,13 +11,8 @@ class SceneNode:
         self.name = None
         # Store the local transform and world transform
         self.localTransform = Transform()
-        if parent == None:
-            self.worldMatrix = self.localTransform.getMatrix()
-        else:
-            self.worldMatrix = np.dot(
-                self.parent.worldMatrix, self.localTransform.getMatrix()
-            )
-        self._transformHelper = o3d.geomtry.TriangleMesh.create_coordinate_frame()
+        self.worldMatrix = np.eye(4)
+        self._transformHelper = o3d.geometry.TriangleMesh.create_coordinate_frame()
         # Store the mesh and deal with functions draw the mesh based on the transform
         self.meshNode = MeshNode()
         self.joint = None
@@ -32,9 +27,12 @@ class SceneNode:
 
     def update(self):
         # Update the worldMatrix of current scene node
-        self.worldMatrix = np.dot(
-            self.parent.worldMatrix, self.localTransform.getMatrix()
-        )
+        if(self.parent != None):
+            self.worldMatrix = np.dot(
+                self.parent.worldMatrix, self.localTransform.getMatrix()
+            )
+        else:
+            self.worldMatrix = self.localTransform.getMatrix()
         # Update the worldMatrix for all it children
         for child in self.children:
             child.update()
