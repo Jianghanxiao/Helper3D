@@ -8,6 +8,7 @@ class SceneNode:
     def __init__(self, parent=None):
         self.parent = parent
         self.children = []
+        self.name = None
         # Store the local transform and world transform
         self.localTransform = Transform()
         if parent == None:
@@ -20,7 +21,7 @@ class SceneNode:
         # Store the mesh and deal with functions draw the mesh based on the transform
         self.meshNode = MeshNode()
         self.joint = None
-
+    
     def setParent(self, parent):
         if parent == None:
             raise RuntimeError("Invalid Parent: parent is not in the SceneNode type")
@@ -34,6 +35,9 @@ class SceneNode:
         self.worldMatrix = np.dot(
             self.parent.worldMatrix, self.localTransform.getMatrix()
         )
+        # Update the worldMatrix for all it children
+        for child in self.children:
+            child.update()
 
     def addChild(self, child):
         # child should also be SceneNode
@@ -49,6 +53,9 @@ class SceneNode:
     def getMesh(self):
         # Get the new mesh based on the world Matrix (Assume that the matrix has been updatated)
         new_mesh = self.meshNode.getMesh(self.worldMatrix)
+        # add mesh from all children
+        for child in self.children:
+            new_mesh += child.getMesh()
         return new_mesh
 
     def translate(self, translation):

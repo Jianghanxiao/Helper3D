@@ -1,6 +1,7 @@
 from src import (
     URDFParser,
-    URDFTree
+    URDFTree,
+    SceneGraph,
 )
 
 if __name__ == "__main__":
@@ -11,6 +12,6 @@ if __name__ == "__main__":
     # Construct the URDF tree
     links = parser.links
     joints = parser.joints
-    
     tree = URDFTree(links, joints)
-    print(tree.root.children[0])
+    # Construct the scene graph
+    scene = SceneGraph(tree.root)
