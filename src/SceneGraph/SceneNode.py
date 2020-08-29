@@ -2,7 +2,8 @@ from .Transform import Transform
 from .MeshNode import MeshNode
 import numpy as np
 from pytransform3d.rotations import (
-    matrix_from_axis_angle
+    matrix_from_axis_angle,
+    matrix_from_angle,
 )
 
 
@@ -65,13 +66,36 @@ class SceneNode:
 
     def rotate(self, axis, angle):
         # axis is in array form: [float, float, float], angle is in rad form
-        pass
+        array = np.zeros(4)
+        array[0:3] = axis
+        array[3] = angle
+        # matrix here is 3*3
+        matrix = matrix_from_axis_angle(array)
+        rotMat = np.zeros(4, 4)
+        rotMat[3, 3] = 1
+        rotMat[0:3, 0:3] = matrix
+        self.localTransform.rotateMat(rotMat)
 
     def rotateX(self, angle):
-        pass
+        # matrix here is 3*3
+        matrix = matrix_from_angle(0, angle)
+        rotMat = np.zeros(4, 4)
+        rotMat[3, 3] = 1
+        rotMat[0:3, 0:3] = matrix
+        self.localTransform.rotateMat(rotMat)
 
     def rotateY(self, angle):
-        pass
+        # matrix here is 3*3
+        matrix = matrix_from_angle(1, angle)
+        rotMat = np.zeros(4, 4)
+        rotMat[3, 3] = 1
+        rotMat[0:3, 0:3] = matrix
+        self.localTransform.rotateMat(rotMat)
 
     def rotateZ(self, angle):
-        pass
+        # matrix here is 3*3
+        matrix = matrix_from_angle(2, angle)
+        rotMat = np.zeros(4, 4)
+        rotMat[3, 3] = 1
+        rotMat[0:3, 0:3] = matrix
+        self.localTransform.rotateMat(rotMat)
