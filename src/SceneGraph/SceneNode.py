@@ -51,6 +51,10 @@ class SceneNode:
     def getMesh(self):
         # Get the new mesh based on the world Matrix (Assume that the matrix has been updatated)
         new_mesh = self.meshNode.getMesh(self.worldMatrix)
+        if new_mesh != None:
+            new_mesh = [new_mesh]
+        else:
+            new_mesh = []
         # add mesh from all children
         for child in self.children:
             new_mesh += child.getMesh()

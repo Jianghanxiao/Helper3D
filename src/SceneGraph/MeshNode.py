@@ -17,7 +17,7 @@ class MeshNode:
 
     def getMesh(self, worldMatrix):
         if self.mesh == None:
-            return o3d.geometry.TriangleMesh()
+            return None    
         new_mesh = copy.deepcopy(self.mesh)
         new_mesh.transform(worldMatrix)
         return new_mesh

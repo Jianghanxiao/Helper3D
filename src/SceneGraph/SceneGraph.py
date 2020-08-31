@@ -1,4 +1,5 @@
 from .SceneNode import SceneNode
+import open3d as o3d
 
 
 class SceneGraph:
@@ -11,7 +12,18 @@ class SceneGraph:
 
     def getMesh(self):
         self.update()
-        return self.root.getMesh()
+        meshes = self.root.getMesh()
+        new_meshes = []
+        mesh_without_texture = o3d.geometry.TriangleMesh()
+        for mesh in meshes:
+            if mesh.has_textures() == True:
+                new_meshes.append(mesh)
+            else:
+                mesh.paint_uniform_color([0, 0, 0])
+                mesh_without_texture += mesh
+        if len(mesh_without_texture.vertices) != 0:
+            new_meshes.append(mesh_without_texture)
+        return new_meshes
 
     def constructNode(self, node, link):
         node.name = link.link.link_name
@@ -32,8 +44,8 @@ class SceneGraph:
                 raise RuntimeError("Invalid File path")
             visual_node.addMeshFile(visual.geometry_mesh["filename"])
             # Deal with xyz and rpy of the visual node
-            visual_xyz = visual.origin['xyz']
-            visual_rpy = visual.origin['rpy']
+            visual_xyz = visual.origin["xyz"]
+            visual_rpy = visual.origin["rpy"]
             visual_node.rotateXYZ(visual_rpy)
             visual_node.translate(visual_xyz)
 
@@ -42,4 +54,3 @@ class SceneGraph:
             child_node = SceneNode(node)
             node.addChild(child_node)
             self.constructNode(child_node, child)
-
