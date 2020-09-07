@@ -3,21 +3,22 @@ import open3d as o3d
 
 
 def get_pcd_from_rgbd(color_img_path, depth_img_path, fx, fy, cx, cy, background_filter=None):
+    # Self-designed with depth unit transform and background filter
     # Calculate the projection matrix by hand; Add manual background filter
     color_raw = np.array(o3d.io.read_image(color_img_path)) / 255
-    depth_raw = np.array(o3d.io.read_image(depth_img_path))
-
+    # Convert the unit to meter
+    depth_raw = np.array(o3d.io.read_image(depth_img_path)) / 1000
     height, width = np.shape(depth_raw)
     points = []
     colors = []
 
     for y in range(height):
         for x in range(width):
-            if depth_raw[y][x] < 1000:
+            if depth_raw[y][x] < 1:
                 continue
             colors.append(color_raw[y][x])
             points.append([(x - cx) * (depth_raw[y][x] / fx),
-                           (y - cy) * (depth_raw[y][x] / fy), depth_raw[y][x]])
+                           -(y - cy) * (depth_raw[y][x] / fy), -depth_raw[y][x]])
 
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(np.array(points))
