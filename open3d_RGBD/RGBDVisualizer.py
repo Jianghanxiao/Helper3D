@@ -6,7 +6,8 @@ import math
 from src import (
     getFocalLength,
     get_pcd_from_rgbd,
-    get_pcd_from_whole_rgbd
+    get_pcd_from_whole_rgbd,
+    get_arrow,
 )
 
 model = '7128'
@@ -27,9 +28,6 @@ if __name__ == "__main__":
     # Display the pc without background
     pcd = get_pcd_from_rgbd(color_img, depth_img,
                             fx, fy, img_height / 2, img_height / 2, 1000)
-
-    camera = o3d.geometry.TriangleMesh.create_coordinate_frame(origin=[0, 0, 0])
-    world = o3d.geometry.TriangleMesh.create_coordinate_frame(origin=[0, 0, 0])
     
     # Transform the pcd into object coordinate using extrinsic matrix
     matrix_raw = annotation['camera']['extrinsic']['matrix']
@@ -40,13 +38,25 @@ if __name__ == "__main__":
     transformation = np.dot(camera_trans, transformation)
     pcd.transform(transformation)
 
-    # Load 3dBBx to check if current coordinate is in object coordinate
-    min_bound_raw = annotation['motions'][0]['3dbbx']['min']
-    max_bound_raw = annotation['motions'][0]['3dbbx']['max']
+    # Visualize the camera and world coordinate
+    world = o3d.geometry.TriangleMesh.create_coordinate_frame()
+    camera = o3d.geometry.TriangleMesh.create_coordinate_frame()
+    camera.transform(transformation)
+
+    # Visualize annotation (Just one motion for testing)
+    motion = annotation['motions'][0]
+    # Visualize 3D BBX
+    min_bound_raw = motion['3dbbx']['min']
+    max_bound_raw = motion['3dbbx']['max']
     min_bound = np.array([min_bound_raw['x'], min_bound_raw['y'], min_bound_raw['z']])
     max_bound = np.array([max_bound_raw['x'], max_bound_raw['y'], max_bound_raw['z']])
     bbx = o3d.geometry.AxisAlignedBoundingBox(min_bound, max_bound)
-    camera.transform(transformation)
-    
+    # Visualize motion axis (still need consider translation visualization)
+    origin_raw = motion['origin']
+    origin = np.array([origin_raw['x'], origin_raw['y'], origin_raw['z']])
+    axis_raw = motion['axis']
+    axis = np.array([axis_raw['x'], axis_raw['y'], axis_raw['z']])
+    arrow1 = get_arrow(origin=origin-axis, vec=2*axis)
+
     # Final Visualization
-    o3d.visualization.draw_geometries([pcd, bbx, camera, world])
+    o3d.visualization.draw_geometries([pcd, bbx, camera, world, arrow1])
