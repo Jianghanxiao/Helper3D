@@ -12,6 +12,8 @@ def get_arrow(origin=[0, 0, 0], end=None, vec=None):
         - end (): End point. [x,y,z]
         - vec (): Vector. [i,j,k]
     """
+    scale = 10
+    Ry = Rz = np.eye(3)
     T = np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
     T[:3, -1] = origin
     if end is not None:
