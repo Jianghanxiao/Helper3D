@@ -8,6 +8,7 @@ from src import (
     get_pcd_from_rgbd,
     get_pcd_from_whole_rgbd,
     get_arrow,
+    getCamera,
 )
 
 model = '7128'
@@ -25,23 +26,26 @@ if __name__ == "__main__":
     FOV = annotation['camera']['intrinsic']['fov']
     # The width and height are the same
     fy, fx = getFocalLength(FOV / 180 * math.pi, img_height, img_width)
-    # Display the pc without background
+    cy = img_height / 2
+    cx = img_width / 2
+    # get the pc without background
     pcd = get_pcd_from_rgbd(color_img, depth_img,
-                            fx, fy, img_height / 2, img_height / 2, 1000)
+                            fx, fy, cx, cy, 1000)
     
-    # Transform the pcd into object coordinate using extrinsic matrix
+    # Deal with the camera pose matrix
     matrix_raw = annotation['camera']['extrinsic']['matrix']
     transformation = np.reshape(matrix_raw, (4, 4)).T
     camera_trans = np.eye(4)
     camera_trans[0, 0] = -1
     camera_trans[2, 2] = -1
     transformation = np.dot(camera_trans, transformation)
+    # Transform the pcd into object coordinate using extrinsic matrix
     pcd.transform(transformation)
 
-    # Visualize the camera and world coordinate
+    # Visualize the world coordinate
     world = o3d.geometry.TriangleMesh.create_coordinate_frame()
-    camera = o3d.geometry.TriangleMesh.create_coordinate_frame()
-    camera.transform(transformation)
+    # Visualize the camera coordinate
+    camera = getCamera(transformation, fx, fy, cx, cy)
 
     # Visualize annotation (Just one motion for testing)
     motion = annotation['motions'][0]
@@ -59,4 +63,4 @@ if __name__ == "__main__":
     arrow1 = get_arrow(origin=origin-axis, vec=2*axis)
 
     # Final Visualization
-    o3d.visualization.draw_geometries([pcd, bbx, camera, world, arrow1])
+    o3d.visualization.draw_geometries([pcd, bbx, world, arrow1] + camera)

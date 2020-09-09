@@ -61,7 +61,10 @@ def calculate_zy_rotation_for_arrow(vec):
         - vec (): 
     """
     # Rotation over z axis of the FOR
-    gamma = np.arctan(vec[1]/vec[0])
+    if vec[0] != 0:
+        gamma = np.arctan(vec[1]/vec[0])
+    else:
+        gamma = np.arctan(np.inf)
     Rz = np.array([[np.cos(gamma), -np.sin(gamma), 0],
                    [np.sin(gamma), np.cos(gamma), 0],
                    [0, 0, 1]])
@@ -69,7 +72,10 @@ def calculate_zy_rotation_for_arrow(vec):
     vec = Rz.T@vec.reshape(-1, 1)
     vec = vec.reshape(-1)
     # Rotation over y axis of the FOR
-    beta = np.arctan(vec[0]/vec[2])
+    if vec[2] != 0:
+        beta = np.arctan(vec[0]/vec[2])
+    else:
+        beta = np.arctan(np.inf)
     Ry = np.array([[np.cos(beta), 0, np.sin(beta)],
                    [0, 1, 0],
                    [-np.sin(beta), 0, np.cos(beta)]])
