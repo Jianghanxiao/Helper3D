@@ -13,13 +13,14 @@ from src import (
     getConventionTransform
 )
 
-source = 'shape2motion'
-model = 'lamp_0060'
-index = '1-1-2'
+source = 'sapien'
+model = '7128'
+index = '0-1-0'
 DATA_PATH = f"/Users/apple/Desktop/3DHelper/data/{model}/"
 
 
 def getMotion(motion):
+    world = np.reshape(motion['world'], (4, 4)).T
     # Visualize 3D BBX
     min_bound_raw = motion['3dbbx']['min']
     max_bound_raw = motion['3dbbx']['max']
@@ -28,7 +29,7 @@ def getMotion(motion):
     max_bound = np.array(
         [max_bound_raw['x'], max_bound_raw['y'], max_bound_raw['z']])
     bbx = BBX(min_bound, max_bound, color=[0.8, 0.2, 0])
-    bbx.transform(convention_matrix)
+    bbx.transform(world)
     bbx = bbx.getMesh()
     # Visualize motion axis (still need consider translation visualization)
     origin_raw = motion['origin']
@@ -36,7 +37,7 @@ def getMotion(motion):
     axis_raw = motion['axis']
     axis = np.array([axis_raw['x'], axis_raw['y'], axis_raw['z']])
     arrow = get_arrow(origin=origin-axis, vec=3*axis, color=[0, 1, 1])
-    arrow.transform(convention_matrix)
+    arrow.transform(world)
 
     return [bbx, arrow]
 
@@ -65,9 +66,6 @@ if __name__ == "__main__":
     transformation = np.reshape(matrix_raw, (4, 4)).T
     # Transform the pcd into object coordinate using extrinsic matrix
     pcd.transform(transformation)
-
-    # Calculate the convention matrix
-    convention_matrix = getConventionTransform(source)
 
     # Visualize the world coordinate
     world = o3d.geometry.TriangleMesh.create_coordinate_frame()
