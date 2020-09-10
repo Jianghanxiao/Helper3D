@@ -29,7 +29,7 @@ def get_arrow(origin=[0, 0, 0], end=None, vec=None, color=[0, 0, 0]):
     mesh.rotate(Rz, center=np.array([0, 0, 0]))
     mesh.translate(origin)
     mesh.paint_uniform_color(color)
-    return(mesh)
+    return mesh
 
 
 def create_arrow(scale=10):
@@ -44,7 +44,7 @@ def create_arrow(scale=10):
                                                         cone_height=cone_height,
                                                         cylinder_radius=cylinder_radius,
                                                         cylinder_height=cylinder_height)
-    return(mesh_frame)
+    return mesh_frame
 
 
 def calculate_zy_rotation_for_arrow(vec):
@@ -80,7 +80,7 @@ def calculate_zy_rotation_for_arrow(vec):
     Ry = np.array([[np.cos(beta), 0, np.sin(beta)],
                    [0, 1, 0],
                    [-np.sin(beta), 0, np.cos(beta)]])
-    return(Rz, Ry)
+    return (Rz, Ry)
 
 
 def vector_magnitude(vec):
@@ -90,4 +90,4 @@ def vector_magnitude(vec):
         - vec (): 
     """
     magnitude = np.sqrt(np.sum(vec**2))
-    return(magnitude)
+    return magnitude

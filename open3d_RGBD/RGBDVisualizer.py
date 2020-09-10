@@ -9,11 +9,13 @@ from src import (
     get_pcd_from_whole_rgbd,
     get_arrow,
     getCamera,
-    BBX
+    BBX,
+    getConventionTransform
 )
 
-model = 'oven_0003'
-index = '1-1-1'
+source = 'sapien'
+model = '7128'
+index = '0-0'
 DATA_PATH = f"/Users/apple/Desktop/3DHelper/data/{model}/"
 
 if __name__ == "__main__":
@@ -38,15 +40,11 @@ if __name__ == "__main__":
     # Deal with the camera pose matrix
     matrix_raw = annotation['camera']['extrinsic']['matrix']
     transformation = np.reshape(matrix_raw, (4, 4)).T
-    camera_trans = np.matrix(np.eye(4))
-    # camera_trans[0, 0] = -1
-    # camera_trans[2, 2] = -1
-    camera_trans[0:3, 0:3] = np.matrix([[0,  0, -1],
-                                        [-1,  0,  0],
-                                        [0, 1,  0]])
-    # transformation = np.dot(camera_trans, transformation)
     # Transform the pcd into object coordinate using extrinsic matrix
     pcd.transform(transformation)
+
+    # Calculate the convention matrix
+    convention_matrix = getConventionTransform(source)
 
     # Visualize the world coordinate
     world = o3d.geometry.TriangleMesh.create_coordinate_frame()
@@ -63,7 +61,7 @@ if __name__ == "__main__":
     max_bound = np.array(
         [max_bound_raw['x'], max_bound_raw['y'], max_bound_raw['z']])
     bbx = BBX(min_bound, max_bound, color=[0.8, 0.2, 0])
-    bbx.transform(camera_trans.I)
+    bbx.transform(convention_matrix)
     bbx = bbx.getMesh()
     # Visualize motion axis (still need consider translation visualization)
     origin_raw = motion['origin']
@@ -71,7 +69,7 @@ if __name__ == "__main__":
     axis_raw = motion['axis']
     axis = np.array([axis_raw['x'], axis_raw['y'], axis_raw['z']])
     arrow1 = get_arrow(origin=origin-axis, vec=3*axis, color=[0, 1, 1])
-    arrow1.transform(camera_trans.I)
+    arrow1.transform(convention_matrix)
 
     # Final Visualization
     o3d.visualization.draw_geometries([pcd, bbx, world, arrow1] + camera)
