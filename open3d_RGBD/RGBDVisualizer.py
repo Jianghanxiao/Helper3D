@@ -62,7 +62,7 @@ if __name__ == "__main__":
         [min_bound_raw['x'], min_bound_raw['y'], min_bound_raw['z']])
     max_bound = np.array(
         [max_bound_raw['x'], max_bound_raw['y'], max_bound_raw['z']])
-    bbx = BBX(min_bound, max_bound)
+    bbx = BBX(min_bound, max_bound, color=[0.8, 0.2, 0])
     bbx.transform(camera_trans.I)
     bbx = bbx.getMesh()
     # Visualize motion axis (still need consider translation visualization)
@@ -70,8 +70,7 @@ if __name__ == "__main__":
     origin = np.array([origin_raw['x'], origin_raw['y'], origin_raw['z']])
     axis_raw = motion['axis']
     axis = np.array([axis_raw['x'], axis_raw['y'], axis_raw['z']])
-    arrow1 = get_arrow(origin=origin-axis, vec=2*axis)
-    arrow1.paint_uniform_color([0, 1, 1])
+    arrow1 = get_arrow(origin=origin-axis, vec=3*axis, color=[0, 1, 1])
     arrow1.transform(camera_trans.I)
 
     # Final Visualization

@@ -5,7 +5,7 @@ import numpy as np
 class BBX:
     # todo: waiting for official bug fixing
     # Becasue offical oriented bounding box has rotate bug, write one for easily use
-    def __init__(self, min_bound, max_bound):
+    def __init__(self, min_bound, max_bound, color=[0, 0, 0]):
         # This init function will only generate axis aligned bounding box
         # But it can be transformed with a transformation matrix
         x_min, y_min, z_min = min_bound
@@ -38,6 +38,7 @@ class BBX:
             points=o3d.utility.Vector3dVector(points),
             lines=o3d.utility.Vector2iVector(lines),
         )
+        self.line_set.paint_uniform_color(color)
 
     def getMesh(self):
         return self.line_set

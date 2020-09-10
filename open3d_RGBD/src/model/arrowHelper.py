@@ -4,7 +4,7 @@ import open3d as o3d
 import numpy as np
 
 
-def get_arrow(origin=[0, 0, 0], end=None, vec=None):
+def get_arrow(origin=[0, 0, 0], end=None, vec=None, color=[0, 0, 0]):
     """
     Creates an arrow from an origin point to an end point,
     or create an arrow from a vector vec starting from origin.
@@ -28,6 +28,7 @@ def get_arrow(origin=[0, 0, 0], end=None, vec=None):
     mesh.rotate(Ry, center=np.array([0, 0, 0]))
     mesh.rotate(Rz, center=np.array([0, 0, 0]))
     mesh.translate(origin)
+    mesh.paint_uniform_color(color)
     return(mesh)
 
 
@@ -37,8 +38,8 @@ def create_arrow(scale=10):
     """
     cone_height = scale*0.2
     cylinder_height = scale*0.8
-    cone_radius = 0.1
-    cylinder_radius = 0.05
+    cone_radius = 0.05
+    cylinder_radius = 0.01
     mesh_frame = o3d.geometry.TriangleMesh.create_arrow(cone_radius=cone_radius,
                                                         cone_height=cone_height,
                                                         cylinder_radius=cylinder_radius,
