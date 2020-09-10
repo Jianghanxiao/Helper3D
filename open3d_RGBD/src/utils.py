@@ -10,5 +10,4 @@ def getConventionTransform(source):
         transformation[0:3, 0:3] = np.matrix([[0,  0, -1],
                                             [-1,  0,  0],
                                             [0, 1,  0]])
-    
     return transformation.I

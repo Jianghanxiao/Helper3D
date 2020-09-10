@@ -13,10 +13,33 @@ from src import (
     getConventionTransform
 )
 
-source = 'sapien'
-model = '7128'
-index = '0-0'
+source = 'shape2motion'
+model = 'lamp_0060'
+index = '1-1-2'
 DATA_PATH = f"/Users/apple/Desktop/3DHelper/data/{model}/"
+
+
+def getMotion(motion):
+    # Visualize 3D BBX
+    min_bound_raw = motion['3dbbx']['min']
+    max_bound_raw = motion['3dbbx']['max']
+    min_bound = np.array(
+        [min_bound_raw['x'], min_bound_raw['y'], min_bound_raw['z']])
+    max_bound = np.array(
+        [max_bound_raw['x'], max_bound_raw['y'], max_bound_raw['z']])
+    bbx = BBX(min_bound, max_bound, color=[0.8, 0.2, 0])
+    bbx.transform(convention_matrix)
+    bbx = bbx.getMesh()
+    # Visualize motion axis (still need consider translation visualization)
+    origin_raw = motion['origin']
+    origin = np.array([origin_raw['x'], origin_raw['y'], origin_raw['z']])
+    axis_raw = motion['axis']
+    axis = np.array([axis_raw['x'], axis_raw['y'], axis_raw['z']])
+    arrow = get_arrow(origin=origin-axis, vec=3*axis, color=[0, 1, 1])
+    arrow.transform(convention_matrix)
+
+    return [bbx, arrow]
+
 
 if __name__ == "__main__":
     color_img = f'{DATA_PATH}origin/{model}-{index}.png'
@@ -52,24 +75,10 @@ if __name__ == "__main__":
     camera = getCamera(transformation, fx, fy, cx, cy)
 
     # Visualize annotation (Just one motion for testing)
-    motion = annotation['motions'][0]
-    # Visualize 3D BBX
-    min_bound_raw = motion['3dbbx']['min']
-    max_bound_raw = motion['3dbbx']['max']
-    min_bound = np.array(
-        [min_bound_raw['x'], min_bound_raw['y'], min_bound_raw['z']])
-    max_bound = np.array(
-        [max_bound_raw['x'], max_bound_raw['y'], max_bound_raw['z']])
-    bbx = BBX(min_bound, max_bound, color=[0.8, 0.2, 0])
-    bbx.transform(convention_matrix)
-    bbx = bbx.getMesh()
-    # Visualize motion axis (still need consider translation visualization)
-    origin_raw = motion['origin']
-    origin = np.array([origin_raw['x'], origin_raw['y'], origin_raw['z']])
-    axis_raw = motion['axis']
-    axis = np.array([axis_raw['x'], axis_raw['y'], axis_raw['z']])
-    arrow1 = get_arrow(origin=origin-axis, vec=3*axis, color=[0, 1, 1])
-    arrow1.transform(convention_matrix)
+    motions = []
+    motion_num = len(annotation['motions'])
+    for motion_index in range(motion_num):
+        motions += getMotion(annotation['motions'][motion_index])
 
     # Final Visualization
-    o3d.visualization.draw_geometries([pcd, bbx, world, arrow1] + camera)
+    o3d.visualization.draw_geometries([pcd, world] + camera + motions)
