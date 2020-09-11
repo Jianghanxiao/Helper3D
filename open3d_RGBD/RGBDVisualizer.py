@@ -13,14 +13,13 @@ from src import (
     getConventionTransform
 )
 
-source = 'sapien'
 model = '7128'
-index = '0-1-0'
+index = '0-2'
 DATA_PATH = f"/Users/apple/Desktop/3DHelper/data/{model}/"
 
 
 def getMotion(motion):
-    world = np.reshape(motion['world'], (4, 4)).T
+    current_pose = np.matrix(np.reshape(motion['current_pose'], (4, 4)).T)
     # Visualize 3D BBX
     min_bound_raw = motion['3dbbx']['min']
     max_bound_raw = motion['3dbbx']['max']
@@ -29,7 +28,7 @@ def getMotion(motion):
     max_bound = np.array(
         [max_bound_raw['x'], max_bound_raw['y'], max_bound_raw['z']])
     bbx = BBX(min_bound, max_bound, color=[0.8, 0.2, 0])
-    bbx.transform(world)
+    bbx.transform(current_pose)
     bbx = bbx.getMesh()
     # Visualize motion axis (still need consider translation visualization)
     origin_raw = motion['origin']
@@ -37,7 +36,7 @@ def getMotion(motion):
     axis_raw = motion['axis']
     axis = np.array([axis_raw['x'], axis_raw['y'], axis_raw['z']])
     arrow = get_arrow(origin=origin-axis, vec=3*axis, color=[0, 1, 1])
-    arrow.transform(world)
+    arrow.transform(current_pose)
 
     return [bbx, arrow]
 
@@ -80,3 +79,5 @@ if __name__ == "__main__":
 
     # Final Visualization
     o3d.visualization.draw_geometries([pcd, world] + camera + motions)
+
+    # o3d.visualization.draw_geometries([pcd, world])
