@@ -10,35 +10,13 @@ from src import (
     get_arrow,
     getCamera,
     BBX,
-    getConventionTransform
+    getConventionTransform,
+    getMotion,
 )
 
 model = '7128'
 index = '0-2'
 DATA_PATH = f"/Users/apple/Desktop/3DHelper/data/{model}/"
-
-
-def getMotion(motion):
-    current_pose = np.matrix(np.reshape(motion['current_pose'], (4, 4)).T)
-    # Visualize 3D BBX
-    min_bound_raw = motion['3dbbx']['min']
-    max_bound_raw = motion['3dbbx']['max']
-    min_bound = np.array(
-        [min_bound_raw['x'], min_bound_raw['y'], min_bound_raw['z']])
-    max_bound = np.array(
-        [max_bound_raw['x'], max_bound_raw['y'], max_bound_raw['z']])
-    bbx = BBX(min_bound, max_bound, color=[0.8, 0.2, 0])
-    bbx.transform(current_pose)
-    bbx = bbx.getMesh()
-    # Visualize motion axis (still need consider translation visualization)
-    origin_raw = motion['origin']
-    origin = np.array([origin_raw['x'], origin_raw['y'], origin_raw['z']])
-    axis_raw = motion['axis']
-    axis = np.array([axis_raw['x'], axis_raw['y'], axis_raw['z']])
-    arrow = get_arrow(origin=origin-axis, vec=3*axis, color=[0, 1, 1])
-    arrow.transform(current_pose)
-
-    return [bbx, arrow]
 
 
 if __name__ == "__main__":
@@ -75,7 +53,7 @@ if __name__ == "__main__":
     motions = []
     motion_num = len(annotation['motions'])
     for motion_index in range(motion_num):
-        motions += getMotion(annotation['motions'][motion_index])
+        motions += getMotion(annotation['motions'][motion_index], state='initial')
 
     # Final Visualization
     o3d.visualization.draw_geometries([pcd, world] + camera + motions)
