@@ -14,8 +14,8 @@ from src import (
     getMotion,
 )
 
-model = '7128'
-index = '0-2'
+model = '45632'
+index = '0-3-3+bg3'
 DATA_PATH = f"/Users/apple/Desktop/3DHelper/data/{model}/"
 
 

@@ -3,6 +3,7 @@ from .model import (
     get_arrow,
     BBX,
 )
+import open3d as o3d
 
 
 def getConventionTransform(source):
@@ -31,8 +32,8 @@ def getMotion(motion, state='current'):
     origin = np.array(motion[origin_name])
     axis_name = f'{state}_axis'
     axis = np.array(motion[axis_name])
-    arrow = get_arrow(origin=origin-axis, vec=3*axis, color=[0, 1, 1])
-
+    arrow = get_arrow(origin=origin, end=origin+axis, color=[0, 1, 1])
+    
     return [bbx, arrow]
 
 

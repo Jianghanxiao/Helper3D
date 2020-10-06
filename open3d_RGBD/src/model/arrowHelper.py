@@ -4,7 +4,7 @@ import open3d as o3d
 import numpy as np
 
 
-def get_arrow(origin=[0, 0, 0], end=None, vec=None, color=[0, 0, 0]):
+def get_arrow(origin=[0, 0, 0], end=None, color=[0, 0, 0]):
     """
     Creates an arrow from an origin point to an end point,
     or create an arrow from a vector vec starting from origin.
@@ -12,82 +12,46 @@ def get_arrow(origin=[0, 0, 0], end=None, vec=None, color=[0, 0, 0]):
         - end (): End point. [x,y,z]
         - vec (): Vector. [i,j,k]
     """
-    scale = 10
-    Ry = Rz = np.eye(3)
-    T = np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
-    T[:3, -1] = origin
-    if end is not None:
-        vec = np.array(end) - np.array(origin)
-    elif vec is not None:
-        vec = np.array(vec)
-    if end is not None or vec is not None:
-        scale = vector_magnitude(vec)
-        Rz, Ry = calculate_zy_rotation_for_arrow(vec)
-    mesh = create_arrow(scale)
-    # Create the arrow
-    mesh.rotate(Ry, center=np.array([0, 0, 0]))
-    mesh.rotate(Rz, center=np.array([0, 0, 0]))
-    mesh.translate(origin)
-    mesh.paint_uniform_color(color)
-    return mesh
+    vec_Arr = np.array(end) - np.array(origin)
+    vec_len = np.linalg.norm(vec_Arr)
+    mesh_arrow = o3d.geometry.TriangleMesh.create_arrow(
+        cone_height=0.2 * vec_len,
+        cone_radius=0.06 * vec_len,
+        cylinder_height=0.8 * vec_len,
+        cylinder_radius=0.04 * vec_len
+    )
+    mesh_arrow.paint_uniform_color(color)
+    rot_mat = caculate_align_mat(vec_Arr)
+    mesh_arrow.rotate(rot_mat, center=np.array([0, 0, 0]))
+    mesh_arrow.translate(np.array(origin))
+    return mesh_arrow
 
 
-def create_arrow(scale=10):
-    """
-    Create an arrow in for Open3D
-    """
-    cone_height = scale*0.2
-    cylinder_height = scale*0.8
-    cone_radius = 0.05
-    cylinder_radius = 0.01
-    mesh_frame = o3d.geometry.TriangleMesh.create_arrow(cone_radius=cone_radius,
-                                                        cone_height=cone_height,
-                                                        cylinder_radius=cylinder_radius,
-                                                        cylinder_height=cylinder_height)
-    return mesh_frame
+def get_cross_prod_mat(pVec_Arr):
+    # pVec_Arr shape (3)
+    qCross_prod_mat = np.array([
+        [0, -pVec_Arr[2], pVec_Arr[1]],
+        [pVec_Arr[2], 0, -pVec_Arr[0]],
+        [-pVec_Arr[1], pVec_Arr[0], 0],
+    ])
+    return qCross_prod_mat
 
 
-def calculate_zy_rotation_for_arrow(vec):
-    """
-    Calculates the rotations required to go from the vector vec to the 
-    z axis vector of the original FOR. The first rotation that is 
-    calculated is over the z axis. This will leave the vector vec on the
-    XZ plane. Then, the rotation over the y axis. 
+def caculate_align_mat(pVec_Arr):
+    scale = np.linalg.norm(pVec_Arr)
+    pVec_Arr = pVec_Arr / scale
+    # must ensure pVec_Arr is also a unit vec.
+    z_unit_Arr = np.array([0, 0, 1])
+    z_mat = get_cross_prod_mat(z_unit_Arr)
 
-    Returns the angles of rotation over axis z and y required to
-    get the vector vec into the same orientation as axis z
-    of the original FOR
-
-    Args:
-        - vec (): 
-    """
-    # Rotation over z axis of the FOR
-    if vec[0] != 0:
-        gamma = np.arctan(vec[1]/vec[0])
+    z_c_vec = np.matmul(z_mat, pVec_Arr)
+    z_c_vec_mat = get_cross_prod_mat(z_c_vec)
+    if np.dot(z_unit_Arr, pVec_Arr) == -1:
+        qTrans_Mat = -np.eye(3, 3)
+    elif np.dot(z_unit_Arr, pVec_Arr) == 1:   
+        qTrans_Mat = np.eye(3, 3)
     else:
-        gamma = np.arctan(np.inf)
-    Rz = np.array([[np.cos(gamma), -np.sin(gamma), 0],
-                   [np.sin(gamma), np.cos(gamma), 0],
-                   [0, 0, 1]])
-    # Rotate vec to calculate next rotation
-    vec = Rz.T@vec.reshape(-1, 1)
-    vec = vec.reshape(-1)
-    # Rotation over y axis of the FOR
-    if vec[2] != 0:
-        beta = np.arctan(vec[0]/vec[2])
-    else:
-        beta = np.arctan(np.inf)
-    Ry = np.array([[np.cos(beta), 0, np.sin(beta)],
-                   [0, 1, 0],
-                   [-np.sin(beta), 0, np.cos(beta)]])
-    return (Rz, Ry)
-
-
-def vector_magnitude(vec):
-    """
-    Calculates a vector's magnitude.
-    Args:
-        - vec (): 
-    """
-    magnitude = np.sqrt(np.sum(vec**2))
-    return magnitude
+        qTrans_Mat = np.eye(3, 3) + z_c_vec_mat + np.matmul(z_c_vec_mat,
+                                                        z_c_vec_mat)/(1 + np.dot(z_unit_Arr, pVec_Arr))
+    qTrans_Mat *= scale
+    return qTrans_Mat
