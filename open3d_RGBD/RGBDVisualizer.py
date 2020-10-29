@@ -14,9 +14,9 @@ from src import (
     getMotion,
 )
 
-model = '45632'
-index = '0-3-3+bg3'
-DATA_PATH = f"/Users/apple/Desktop/3DHelper/data/{model}/"
+model = '7128'
+index = '0-0'
+DATA_PATH = f"/Users/apple/Desktop/3DHelper/data/{model}_pose/"
 
 
 if __name__ == "__main__":
@@ -49,11 +49,11 @@ if __name__ == "__main__":
     # Visualize the camera coordinate
     camera = getCamera(transformation, fx, fy, cx, cy)
 
-    # Visualize annotation (Just one motion for testing)
+    # Visualize annotation (The annotation is in camera coordinate)
     motions = []
     motion_num = len(annotation['motions'])
     for motion_index in range(motion_num):
-        motions += getMotion(annotation['motions'][motion_index], state='initial')
+        motions += getMotion(annotation['motions'][motion_index], transformation, state='current')
 
     # Final Visualization
     o3d.visualization.draw_geometries([pcd, world] + camera + motions)

@@ -18,23 +18,29 @@ def getConventionTransform(source):
     return transformation.I
 
 
-def getMotion(motion, state='current'):
-    # Used for latest verion: initial/current origin, axis and 3dbbx
+def getMotion(motion, transformation, state='current'):
+    # Used for latest verion: initial/current origin, axis (In camera coordinate)
     # State can be 'current' or 'initial'
-    # Visualize 3D BBX
-    bbx_name = f'{state}_3dbbx'
-    bbx_points = motion[bbx_name]['points']
-    bbx_lines = motion[bbx_name]['lines']
-    bbx = BBX(points=bbx_points, lines=bbx_lines, color=[0.8, 0.2, 0])
-    bbx = bbx.getMesh()
-    # Visualize motion axis (still need consider translation visualization)
+    # # Visualize 3D BBX
+    # bbx_name = f'{state}_3dbbx'
+    # bbx_points = motion[bbx_name]['points']
+    # bbx_lines = motion[bbx_name]['lines']
+    # bbx = BBX(points=bbx_points, lines=bbx_lines, color=[0.8, 0.2, 0])
+    # bbx = bbx.getMesh()
+
+    ''' Visualize 3D BBX with the part pose '''
+
+
+    ''' Visualize motion axis (still need consider translation visualization) '''
     origin_name = f'{state}_origin'
-    origin = np.array(motion[origin_name])
+    origin = np.dot(transformation, np.array(motion[origin_name] + [1]))[0:3]
     axis_name = f'{state}_axis'
-    axis = np.array(motion[axis_name])
-    arrow = get_arrow(origin=origin, end=origin+axis, color=[0, 1, 1])
+    axis_point = list(np.array(motion[origin_name]) + np.array(motion[axis_name]))
+    axis_point = np.dot(transformation, np.array(axis_point + [1]))[0:3]
+
+    arrow = get_arrow(origin=origin, end=axis_point, color=[0, 1, 1])
     
-    return [bbx, arrow]
+    return [arrow]
 
 
 # def getMotion(motion):

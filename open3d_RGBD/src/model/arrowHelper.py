@@ -16,9 +16,9 @@ def get_arrow(origin=[0, 0, 0], end=None, color=[0, 0, 0]):
     vec_len = np.linalg.norm(vec_Arr)
     mesh_arrow = o3d.geometry.TriangleMesh.create_arrow(
         cone_height=0.2 * vec_len,
-        cone_radius=0.06 * vec_len,
+        cone_radius=0.06,
         cylinder_height=0.8 * vec_len,
-        cylinder_radius=0.04 * vec_len
+        cylinder_radius=0.04,
     )
     mesh_arrow.paint_uniform_color(color)
     rot_mat = caculate_align_mat(vec_Arr)
