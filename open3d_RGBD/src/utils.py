@@ -4,6 +4,7 @@ from .model import (
     BBX,
 )
 import open3d as o3d
+from .rotation_utils import eulerAnglesToRotationMatrix
 
 
 def getConventionTransform(source):
@@ -27,20 +28,33 @@ def getMotion(motion, transformation, state='current'):
     # bbx_lines = motion[bbx_name]['lines']
     # bbx = BBX(points=bbx_points, lines=bbx_lines, color=[0.8, 0.2, 0])
     # bbx = bbx.getMesh()
-
     ''' Visualize 3D BBX with the part pose '''
-
+    part_dimension = np.array(motion['partPose']['dimension'])
+    part_translation = np.array(motion['partPose']['translation'])
+    part_rotation = np.array(motion['partPose']['rotation'])
+    # Construct the intial consistent bbx in camera coordinate
+    min_bound = (-part_dimension[0]/2,
+                 -part_dimension[1]/2, -part_dimension[2]/2)
+    max_bound = (part_dimension[0]/2, part_dimension[1]/2, part_dimension[2]/2)
+    bbx = BBX(min_bound=min_bound, max_bound=max_bound)
+    # Construct the transformation matrix
+    pose_transformation = np.eye(4)
+    pose_transformation[0:3, 3] = part_translation
+    pose_transformation[0:3, 0:3] = eulerAnglesToRotationMatrix(part_rotation)
+    bbx.transform(np.dot(transformation, pose_transformation))
+    bbx = bbx.getMesh()
 
     ''' Visualize motion axis (still need consider translation visualization) '''
     origin_name = f'{state}_origin'
     origin = np.dot(transformation, np.array(motion[origin_name] + [1]))[0:3]
     axis_name = f'{state}_axis'
-    axis_point = list(np.array(motion[origin_name]) + np.array(motion[axis_name]))
+    axis_point = list(
+        np.array(motion[origin_name]) + np.array(motion[axis_name]))
     axis_point = np.dot(transformation, np.array(axis_point + [1]))[0:3]
 
     arrow = get_arrow(origin=origin, end=axis_point, color=[0, 1, 1])
-    
-    return [arrow]
+
+    return [bbx, arrow]
 
 
 # def getMotion(motion):
