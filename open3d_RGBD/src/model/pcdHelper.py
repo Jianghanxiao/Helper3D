@@ -22,7 +22,7 @@ def get_pcd_from_rgbd(color_img_path, depth_img_path, fx, fy, cx, cy, background
 
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(np.array(points))
-    pcd.colors = o3d.utility.Vector3dVector(np.array(colors))
+    pcd.colors = o3d.utility.Vector3dVector(np.array(colors)[:, 0:3])
 
     return pcd
 

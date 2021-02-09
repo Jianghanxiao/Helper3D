@@ -15,8 +15,8 @@ from src import (
 )
 
 model = '7128'
-index = '0-0'
-DATA_PATH = f"/Users/apple/Desktop/3DHelper/data/{model}_pose/"
+index = '0-2-0'
+DATA_PATH = f"/Users/shawn/Desktop/3DHelper/data/{model}_pose/"
 
 
 if __name__ == "__main__":
