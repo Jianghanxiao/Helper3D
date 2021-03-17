@@ -27,11 +27,13 @@ def get_pcd_from_rgbd(color_img_path, depth_img_path, fx, fy, cx, cy, background
     return pcd
 
 
-def get_pcd_from_whole_rgbd(color_img_path, depth_img_path, fx, fy, cx, cy,):
+def get_pcd_from_whole_rgbd(color_img_path, depth_img_path, fx, fy, cx, cy, extrinsic=np.eye(4)):
     # Use the open3d function to visualize the whole pc
     # Read the color and depth image
     color_raw = o3d.io.read_image(color_img_path)
-    depth_raw = o3d.io.read_image(depth_img_path)
+    depth_data = np.array(o3d.io.read_image(depth_img_path)) / 1000
+    depth_data.astype(np.float)
+    depth_raw = o3d.geometry.Image(depth_data)
     height, width = np.shape(np.array(depth_raw))
     # Get the colored RGBD
     rgbd_image = o3d.geometry.RGBDImage.create_from_color_and_depth(

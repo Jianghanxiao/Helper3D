@@ -53,7 +53,8 @@ def getMotion(motion, transformation, state='current'):
     axis_point = np.dot(transformation, np.array(axis_point + [1]))[0:3]
 
     arrow = get_arrow(origin=origin, end=axis_point, color=[0, 1, 1])
-
+    # import pdb
+    # pdb.set_trace()
     return [bbx, arrow]
 
 
