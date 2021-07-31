@@ -1,5 +1,6 @@
 from .SceneNode import SceneNode
 import open3d as o3d
+import numpy as np
 
 
 class SceneGraph:
@@ -19,7 +20,7 @@ class SceneGraph:
             if mesh.has_textures() == True:
                 new_meshes.append(mesh)
             else:
-                mesh.paint_uniform_color([0, 0, 0])
+                mesh.paint_uniform_color([np.random.rand(), np.random.rand(), np.random.rand()])
                 mesh_without_texture += mesh
         if len(mesh_without_texture.vertices) != 0:
             new_meshes.append(mesh_without_texture)

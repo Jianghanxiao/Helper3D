@@ -6,7 +6,7 @@ from src import (
 import open3d as o3d
 
 if __name__ == "__main__":
-    URDF_file = "/Users/apple/Desktop/3DHelper/data/7128/mobility.urdf"
+    URDF_file = "/Users/shawn/Desktop/3DHelper/data/45194_urdf/mobility.urdf"
     # Parse the URDF file
     parser = URDFParser(URDF_file)
     parser.parse()

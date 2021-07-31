@@ -14,9 +14,9 @@ from src import (
     getMotion,
 )
 
-model = '7128'
-index = '0-2-0'
-DATA_PATH = f"/Users/shawn/Desktop/3DHelper/data/{model}_pose/"
+model = '45841'
+index = '0-3'
+DATA_PATH = f"/Users/shawn/Desktop/3DHelper/data/{model}/"
 
 
 if __name__ == "__main__":
@@ -46,6 +46,9 @@ if __name__ == "__main__":
 
     # Visualize the world coordinate
     world = o3d.geometry.TriangleMesh.create_coordinate_frame()
+
+    test = o3d.geometry.TriangleMesh.create_coordinate_frame()
+    test.translate([ 0.33785772,  0.42967508, -0.47955493], relative=False)
     # Visualize the camera coordinate
     camera = getCamera(transformation, fx, fy, cx, cy)
 
@@ -56,6 +59,6 @@ if __name__ == "__main__":
         motions += getMotion(annotation['motions'][motion_index], transformation, state='current')
 
     # Final Visualization
-    o3d.visualization.draw_geometries([pcd, world] + camera + motions)
+    o3d.visualization.draw_geometries([pcd, world] + [test] + camera + motions)
 
     # o3d.visualization.draw_geometries([pcd, world])
