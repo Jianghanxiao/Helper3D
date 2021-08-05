@@ -37,7 +37,7 @@ def get_pcd_from_rgbd_mask(color_img_path, depth_img_path, mask_img_path, fx, fy
 
     # The static part should always be 0
     # The mask is a binary mask
-    if len(mask_raw.shape) == 1:
+    if len(mask_raw.shape) == 2:
         def f(mask_raw):
             return not (mask_raw == 0)
         is_mask = f
