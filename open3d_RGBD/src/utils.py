@@ -44,6 +44,9 @@ def getMotion(motion, transformation, state='current'):
     bbx.transform(np.dot(transformation, pose_transformation))
     bbx = bbx.getMesh()
 
+    # import pdb
+    # pdb.set_trace()
+
     ''' Visualize motion axis (still need consider translation visualization) '''
     origin_name = f'{state}_origin'
     origin = np.dot(transformation, np.array(motion[origin_name] + [1]))[0:3]
