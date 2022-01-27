@@ -2,7 +2,7 @@ import numpy as np
 import open3d as o3d
 
 
-def get_pcd_from_rgbd(color_img_path, depth_img_path, fx, fy, cx, cy, background_filter=None):
+def get_pcd_from_rgbd(color_img_path, depth_img_path, fx=-1, fy=-1, cx=-1, cy=-1, background_filter=None, is_real=False, intrinsic_matrix=None):
     # Self-designed with depth unit transform and background filter
     # Calculate the projection matrix by hand; Add manual background filter
     color_raw = np.array(o3d.io.read_image(color_img_path)) / 255
@@ -14,11 +14,16 @@ def get_pcd_from_rgbd(color_img_path, depth_img_path, fx, fy, cx, cy, background
 
     for y in range(height):
         for x in range(width):
-            if depth_raw[y][x] < 1:
-                continue
+            # if depth_raw[y][x] < 1:
+            #     continue
             colors.append(color_raw[y][x])
-            points.append([(x - cx) * (depth_raw[y][x] / fx),
-                           -(y - cy) * (depth_raw[y][x] / fy), -depth_raw[y][x]])
+            if not is_real:
+                points.append([(x - cx) * (depth_raw[y][x] / fx),
+                            -(y - cy) * (depth_raw[y][x] / fy), -depth_raw[y][x]])
+            else:
+                old_point = np.array([x*depth_raw[y][x], y*depth_raw[y][x], depth_raw[y][x]])
+                point = np.dot(np.linalg.inv(intrinsic_matrix), old_point)
+                points.append(point)
 
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(np.array(points))

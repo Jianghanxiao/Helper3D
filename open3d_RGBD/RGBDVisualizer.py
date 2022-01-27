@@ -14,9 +14,10 @@ from src import (
     getMotion,
 )
 
-model = '45194'
-index = '0-0'
+model = '723'
+index = '5'
 DATA_PATH = f"/Users/shawn/Desktop/3DHelper/data/{model}/"
+is_real = True
 
 
 if __name__ == "__main__":
@@ -29,15 +30,18 @@ if __name__ == "__main__":
     # Read camera intrinsics
     img_height = annotation['height']
     img_width = annotation['width']
-    FOV = annotation['camera']['intrinsic']['fov']
-    # The width and height are the same
-    fy, fx = getFocalLength(FOV / 180 * math.pi, img_height, img_width)
-    cy = img_height / 2
-    cx = img_width / 2
-    # get the pc without background
-    pcd = get_pcd_from_rgbd(color_img, depth_img,
-                            fx, fy, cx, cy, 1000)
-
+    if not is_real:
+        FOV = annotation['camera']['intrinsic']['fov']
+        # The width and height are the same
+        fy, fx = getFocalLength(FOV / 180 * math.pi, img_height, img_width)
+        cy = img_height / 2
+        cx = img_width / 2
+        # get the pc without background
+        pcd = get_pcd_from_rgbd(color_img, depth_img,
+                                fx, fy, cx, cy, 1000)
+    else:
+        intrinsic_matrix = np.reshape(annotation['camera']['intrinsic']['matrix'], (3, 3), order='F')
+        pcd = get_pcd_from_rgbd(color_img, depth_img, is_real=is_real, intrinsic_matrix=intrinsic_matrix)
     # Deal with the camera pose matrix
     matrix_raw = annotation['camera']['extrinsic']['matrix']
     transformation = np.reshape(matrix_raw, (4, 4)).T
@@ -50,13 +54,16 @@ if __name__ == "__main__":
     test = o3d.geometry.TriangleMesh.create_coordinate_frame()
     test.translate([ 0.33785772,  0.42967508, -0.47955493], relative=False)
     # Visualize the camera coordinate
-    camera = getCamera(transformation, fx, fy, cx, cy)
+    if not is_real:
+        camera = getCamera(transformation, fx, fy, cx, cy)
+    else:
+        camera = []
 
     # Visualize annotation (The annotation is in camera coordinate)
     motions = []
     motion_num = len(annotation['motions'])
     for motion_index in range(motion_num):
-        motions += getMotion(annotation['motions'][motion_index], transformation, state='current')
+        motions += getMotion(annotation['motions'][motion_index], transformation, state='current', is_real=is_real)
 
     # Final Visualization
     o3d.visualization.draw_geometries([pcd, world] + [test] + camera + motions)

@@ -19,7 +19,7 @@ def getConventionTransform(source):
     return transformation.I
 
 
-def getMotion(motion, transformation, state='current'):
+def getMotion(motion, transformation, state='current', is_real=False):
     # Used for latest verion: initial/current origin, axis (In camera coordinate)
     # State can be 'current' or 'initial'
     # # Visualize 3D BBX
@@ -28,21 +28,22 @@ def getMotion(motion, transformation, state='current'):
     # bbx_lines = motion[bbx_name]['lines']
     # bbx = BBX(points=bbx_points, lines=bbx_lines, color=[0.8, 0.2, 0])
     # bbx = bbx.getMesh()
-    ''' Visualize 3D BBX with the part pose '''
-    part_dimension = np.array(motion['partPose']['dimension'])
-    part_translation = np.array(motion['partPose']['translation'])
-    part_rotation = np.array(motion['partPose']['rotation'])
-    # Construct the intial consistent bbx in camera coordinate
-    min_bound = (-part_dimension[0]/2,
-                 -part_dimension[1]/2, -part_dimension[2]/2)
-    max_bound = (part_dimension[0]/2, part_dimension[1]/2, part_dimension[2]/2)
-    bbx = BBX(min_bound=min_bound, max_bound=max_bound)
-    # Construct the transformation matrix
-    pose_transformation = np.eye(4)
-    pose_transformation[0:3, 3] = part_translation
-    pose_transformation[0:3, 0:3] = eulerAnglesToRotationMatrix(part_rotation)
-    bbx.transform(np.dot(transformation, pose_transformation))
-    bbx = bbx.getMesh()
+    if not is_real:
+        ''' Visualize 3D BBX with the part pose '''
+        part_dimension = np.array(motion['partPose']['dimension'])
+        part_translation = np.array(motion['partPose']['translation'])
+        part_rotation = np.array(motion['partPose']['rotation'])
+        # Construct the intial consistent bbx in camera coordinate
+        min_bound = (-part_dimension[0]/2,
+                    -part_dimension[1]/2, -part_dimension[2]/2)
+        max_bound = (part_dimension[0]/2, part_dimension[1]/2, part_dimension[2]/2)
+        bbx = BBX(min_bound=min_bound, max_bound=max_bound)
+        # Construct the transformation matrix
+        pose_transformation = np.eye(4)
+        pose_transformation[0:3, 3] = part_translation
+        pose_transformation[0:3, 0:3] = eulerAnglesToRotationMatrix(part_rotation)
+        bbx.transform(np.dot(transformation, pose_transformation))
+        bbx = bbx.getMesh()
 
     # import pdb
     # pdb.set_trace()
@@ -58,7 +59,10 @@ def getMotion(motion, transformation, state='current'):
     arrow = get_arrow(origin=origin, end=axis_point, color=[0, 1, 1])
     # import pdb
     # pdb.set_trace()
-    return [bbx, arrow]
+    if not is_real:
+        return [bbx, arrow]
+    else:
+        return [arrow]
 
 
 # def getMotion(motion):
