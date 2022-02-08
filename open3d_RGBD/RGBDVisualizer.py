@@ -14,10 +14,10 @@ from src import (
     getMotion,
 )
 
-model = '723'
-index = '5'
+model = '45194'
+index = '0-0'
 DATA_PATH = f"/Users/shawn/Desktop/3DHelper/data/{model}/"
-is_real = True
+is_real = False
 
 
 if __name__ == "__main__":

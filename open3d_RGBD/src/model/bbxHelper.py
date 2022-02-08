@@ -50,6 +50,38 @@ class BBX:
         else:
             raise RuntimeError('Error when initializing the bounding box')
 
+    def change(self, min_bound, max_bound):
+        # This init function will only generate axis aligned bounding box
+            # But it can be transformed with a transformation matrix
+            x_min, y_min, z_min = min_bound
+            x_max, y_max, z_max = max_bound
+            # Create the bounding box
+            points = []
+            points.append([x_min, y_min, z_min])
+            points.append([x_max, y_min, z_min])
+            points.append([x_max, y_max, z_min])
+            points.append([x_min, y_max, z_min])
+            points.append([x_min, y_min, z_max])
+            points.append([x_max, y_min, z_max])
+            points.append([x_max, y_max, z_max])
+            points.append([x_min, y_max, z_max])
+            lines = [
+                [0, 1],
+                [1, 2],
+                [2, 3],
+                [3, 0],
+                [4, 5],
+                [5, 6],
+                [6, 7],
+                [7, 4],
+                [0, 4],
+                [1, 5],
+                [2, 6],
+                [3, 7]
+            ]
+            self.line_set.points = o3d.utility.Vector3dVector(points)
+
+
     def getMesh(self):
         return self.line_set
 
