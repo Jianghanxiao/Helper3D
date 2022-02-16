@@ -15,7 +15,7 @@ from src import (
 )
 
 model = '45194'
-index = '0-0'
+index = '0-1-0'
 DATA_PATH = f"/Users/shawn/Desktop/3DHelper/data/{model}/"
 is_real = False
 

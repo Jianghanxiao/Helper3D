@@ -2,6 +2,11 @@ import numpy as np
 import open3d as o3d
 
 
+def get_pcd_from_array(pcd_array):
+    pcd = o3d.geometry.PointCloud()
+    pcd.points = o3d.utility.Vector3dVector(np.array(pcd_array))
+    return pcd
+
 def get_pcd_from_rgbd(color_img_path, depth_img_path, fx=-1, fy=-1, cx=-1, cy=-1, background_filter=None, is_real=False, intrinsic_matrix=None):
     # Self-designed with depth unit transform and background filter
     # Calculate the projection matrix by hand; Add manual background filter
