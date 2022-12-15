@@ -1,5 +1,3 @@
-!! Bug when dealing with the rpy rotation for URDF parsing (scene graph transformation is not correct) -> should use eulerXYZ to deal with that
-
 # 3DHelper
 This repo is used to integrate some useful code snippets for 3D visualization using open3D. 
 
