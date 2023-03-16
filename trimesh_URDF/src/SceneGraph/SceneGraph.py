@@ -30,7 +30,8 @@ class SceneGraph:
             # Construct the joint node firstly; Deal with xyz and rpy of the node
             joint_xyz = node.joint.origin["xyz"]
             joint_rpy = node.joint.origin["rpy"]
-            node.rotateXYZLocal(joint_rpy)
+            # The rotation of RPY
+            node.rotateRPYLocal(joint_rpy)
             node.translateLocal(joint_xyz)
         # Construct the mesh nodes for multiple visuals in link
         visuals = link.link.visuals
@@ -44,7 +45,7 @@ class SceneGraph:
             # Deal with xyz and rpy of the visual node
             visual_xyz = visual.origin["xyz"]
             visual_rpy = visual.origin["rpy"]
-            visual_node.rotateXYZLocal(visual_rpy)
+            visual_node.rotateRPYLocal(visual_rpy)
             visual_node.translateLocal(visual_xyz)
 
         # Construct node for the children

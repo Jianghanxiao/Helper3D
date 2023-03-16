@@ -1,11 +1,10 @@
-from src import (
+from trimesh_URDF import (
     URDFParser,
     URDFTree,
     SceneGraph,
 )
 import numpy as np
 
-# We use sapien model as example here
 URDFPATH = "/local-scratch/localhome/hja40/Desktop/Dataset/data/models3d/partnetsim/mobility_v1_alpha5/45194/mobility.urdf"
 
 
@@ -32,8 +31,14 @@ if __name__ == '__main__':
     # Interact with the URDF
     controller["link_0"].interact(np.pi/2)
     controller["link_1"].interact(np.pi/4)
-    # controller["link_2"].interact(0.2)
+    controller["link_2"].interact(0.2)
 
     # Get the final visualziation
     mesh = scene.getMesh()
+
+    import trimesh
+    coordinate = trimesh.creation.axis()
+    mesh.add_geometry(coordinate)
+
+
     mesh.show()

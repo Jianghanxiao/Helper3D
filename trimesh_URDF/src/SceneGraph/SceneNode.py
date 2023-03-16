@@ -1,4 +1,3 @@
-from .Transform import Transform
 from .MeshNode import MeshNode
 import numpy as np
 import trimesh
@@ -11,7 +10,7 @@ class SceneNode:
         self.children = []
         self.name = None
         # Store the local transform and world transform
-        self.localTransform = Transform()
+        self.localTransform = np.eye(4)
         self.worldMatrix = np.eye(4)
         self.interactMatrix = np.eye(4)
         self._transformHelper = o3d.geometry.TriangleMesh.create_coordinate_frame()
@@ -27,19 +26,20 @@ class SceneNode:
             raise RuntimeError("Invalid Parent: parent is not in the SceneNode type")
         self.parent = parent
         self.worldMatrix = np.dot(
-            self.parent.worldMatrix, self.localTransform.getMatrix()
-        )
+                self.parent.worldMatrix,
+                np.dot(self.interactMatrix, self.localTransform),
+            )
 
     def update(self):
         # Update the worldMatrix of current scene node
         if self.parent != None:
             self.worldMatrix = np.dot(
                 self.parent.worldMatrix,
-                np.dot(self.interactMatrix, self.localTransform.getMatrix()),
+                np.dot(self.interactMatrix, self.localTransform),
             )
         else:
             self.worldMatrix = np.dot(
-                self.interactMatrix, self.localTransform.getMatrix()
+                self.interactMatrix, self.localTransform
             )
         # Update the worldMatrix for all it children
         for child in self.children:
@@ -115,7 +115,13 @@ class SceneNode:
                 [0, 0, 0, 1],
             ]
         )
-        self.localTransform.translateMat(transMat)
+        self.localTransform = np.dot(transMat, self.localTransform)
+    
+    def rotateRPYLocal(self, rpy):
+        # rpy in radian
+        self.rotateLocal(np.array([1, 0, 0]), rpy[0])
+        self.rotateLocal(np.array([0, 1, 0]), rpy[1])
+        self.rotateLocal(np.array([0, 0, 1]), rpy[2])
 
     def rotateLocal(self, axis, angle):
         # Convert axis into 3*1 array
@@ -125,11 +131,4 @@ class SceneNode:
         matrix = self._transformHelper.get_rotation_matrix_from_axis_angle(axisAngle)
         rotMat = np.eye(4)
         rotMat[0:3, 0:3] = matrix
-        self.localTransform.rotateMat(rotMat)
-
-    def rotateXYZLocal(self, angle):
-        # angle should be in array form [float, float, float] in radius
-        matrix = self._transformHelper.get_rotation_matrix_from_xyz(angle)
-        rotMat = np.eye(4)
-        rotMat[0:3, 0:3] = matrix
-        self.localTransform.rotateMat(rotMat)
+        self.localTransform = np.dot(rotMat, self.localTransform)
