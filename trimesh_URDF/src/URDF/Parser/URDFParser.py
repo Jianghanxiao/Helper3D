@@ -88,12 +88,3 @@ class URDFParser:
                 joint.setLimitLower(lower)
                 joint.setLimitUpper(upper)
             self.joints[joint_name] = joint
-
-
-# Test the parser
-if __name__ == "__main__":
-    file_name = "../../../data/43074/mobility.urdf"
-    parser = URDFParser(file_name)
-    parser.parse()
-
-    print(parser.links)

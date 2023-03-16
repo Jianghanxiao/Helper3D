@@ -6,7 +6,7 @@ class URDFTree:
     def __init__(self, links, joints):
         self.links = links
         self.joints = joints
-        # Init EsLinks (extended links: include joint info in the child part; parent and child info)
+        # Init ExLinks (extended links: include joint info in the child part; parent and child info)
         self.exLinks = {}
         self.initExlinks()
         # Build the tree and find the root (If not strictly a tree, consttruct a virtual root)
