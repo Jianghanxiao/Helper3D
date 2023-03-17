@@ -71,12 +71,12 @@ class SceneNode:
 
     # Rotation is in degree, translation is in meter
     def interact(self, change):
-        if self.joint.joint_type != "revolute" and self.joint.joint_type != "prismatic":
+        if self.joint.joint_type != "revolute" and self.joint.joint_type != "prismatic" and self.joint.joint_type != "continuous":
             print(
                 f"The joint type {self.joint.type} cannot be articualted or not supported yet"
             )
             return
-        if self.joint.joint_type == "revolute":
+        if self.joint.joint_type == "revolute" or self.joint.joint_type == "continuous":
             self.translate(-self.joint.origin["xyz"])
             self.rotate(self.joint.axis, change)
             self.translate(self.joint.origin["xyz"])
