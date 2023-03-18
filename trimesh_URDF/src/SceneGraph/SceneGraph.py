@@ -11,6 +11,11 @@ class SceneGraph:
     # Return all the nodes to control
     def getNodes(self):
         return self.controll_nodes
+    
+    # Print all the link information with associated joints
+    def getInfo(self):
+        for name, node in self.controll_nodes.items():
+            node.getInfo()
 
 
     def update(self):

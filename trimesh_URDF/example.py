@@ -1,10 +1,11 @@
-from trimesh_URDF import (
+from src import (
     URDFParser,
     URDFTree,
     SceneGraph,
 )
 import numpy as np
 
+# The model is from SAPIEN dataset (https://sapien.ucsd.edu/)
 URDFPATH = "/local-scratch/localhome/hja40/Desktop/Dataset/data/models3d/partnetsim/mobility_v1_alpha5/45194/mobility.urdf"
 
 
@@ -24,8 +25,7 @@ if __name__ == '__main__':
     # Get all the nodes
     controller = scene.getNodes()
     # Print the joint information for all the nodes
-    for name, node in controller.items():
-        node.getInfo()
+    scene.getInfo()
 
 
     # Interact with the URDF
