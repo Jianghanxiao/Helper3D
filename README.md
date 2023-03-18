@@ -1,4 +1,4 @@
-# 3DHelper
+# Helper3D
 This repo is used to integrate some useful code snippets for 3D visualization using Open3D and URDF supporter using trimesh (open3d texture support is not good....). 
 
 <table>
