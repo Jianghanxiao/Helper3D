@@ -1,5 +1,1 @@
-from .src import (
-    URDFParser,
-    URDFTree,
-    SceneGraph,
-)
+from .utils import getURDF
