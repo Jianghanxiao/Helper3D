@@ -21,5 +21,5 @@ This part also provide some arrow helper to draw arrows in open3d.
 Feel free to make your personal design for the intrinsic and extrinsic transformations.
 
 ## trimesh_URDF
-This project is used to load URDF, visualize and intereact with it using simple code with Trimesh. It inolves a simple scene graph implemetation, a simple (may not contain all attributes) URDF parser and URDF tree constructor. (Check the example code to see how to play with it).
+This project is used to load URDF, visualize and intereact with it using simple code with Trimesh. It inolves a simple scene graph implemetation, a simple (may not contain all attributes) URDF parser and URDF tree constructor. (Check the `demo_RRDF.py` code to see how to play with it).
 

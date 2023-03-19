@@ -26,11 +26,26 @@ if __name__ == "__main__":
     urdf, controller = getURDF(URDFPATH)
 
     # Interact with the URDF
-    controller["link_0"].interact(-0.5235987755982988)
+    # controller["link_0"].interact(-0.5235987755982988)
 
     mesh = urdf.getMesh()
 
-    coordinate = trimesh.creation.axis(origin_size=0.1)
+    coordinate = trimesh.creation.axis()
     mesh.add_geometry(coordinate)
 
-    mesh.show()
+    # Define camera parameters
+    resolution = (512, 512)
+    fov = (45, 45)
+    mesh.set_camera(resolution=resolution, fov=fov)
+
+    # Get the positions of the
+    center = mesh.centroid
+    positions = getSpherePositions(center=center, radius=4)
+
+    # Loop over the camera positions and render the images
+    for i, pos in enumerate(positions):
+        # Set the camera view and render the image
+        matrix = lookAt(eye=pos, target=center, up=np.array([0.0, 0.0, 1.0]))
+        mesh.camera_transform = matrix
+        rgb = getRGB(mesh)
+        rgb.save(f"{OUTPUTDIR}/{MODELID}_rgb_{i}.png")
