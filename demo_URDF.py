@@ -23,7 +23,7 @@ def getRGB(scene):
 
 
 if __name__ == "__main__":
-    urdf, controller = getURDF(URDFPATH)
+    urdf, controller = getURDF(URDFPATH, JointInfo=True)
 
     # Interact with the URDF
     controller["link_0"].interact(-0.5235987755982988)
