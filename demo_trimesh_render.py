@@ -35,10 +35,10 @@ if __name__ == "__main__":
 
     # Define camera parameters
     resolution = (512, 512)
-    fov = (45, 45)
+    fov = (90, 90)
     mesh.set_camera(resolution=resolution, fov=fov)
 
-    # Get the positions of the
+    # Get the positions of the cameras on a sphere centered at the object center
     center = mesh.centroid
     positions = getSpherePositions(center=center, radius=4)
 
