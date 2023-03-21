@@ -7,5 +7,6 @@ from .src import (
     BBX,
     getConventionTransform,
     getMotion,
+    getOpen3DFromTrimeshScene
 )
 

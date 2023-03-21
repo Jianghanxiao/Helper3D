@@ -7,6 +7,17 @@ import open3d as o3d
 from .rotation_utils import eulerAnglesToRotationMatrix
 
 
+# Convert the trimesh scene into open3d geometry
+def getOpen3DFromTrimeshScene(trimesh_scene, random_color=True):
+    mesh = o3d.geometry.TriangleMesh()
+    for key, geometry in trimesh_scene.geometry.items():
+        temp_mesh = geometry.as_open3d
+        if random_color:
+            temp_mesh.paint_uniform_color(np.random.rand(3))
+        mesh += temp_mesh
+    return mesh   
+
+
 def getConventionTransform(source):
     transformation = np.matrix(np.eye(4))
     if(source == 'partnetsim' or source == 'sapien' or source == 'SAPIEN'):

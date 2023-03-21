@@ -12,6 +12,7 @@ from .model import (
 from .utils import (
     getConventionTransform,
     getMotion,
+    getOpen3DFromTrimeshScene
 )
 
 from .rotation_utils import (
