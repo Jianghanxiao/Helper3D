@@ -6,11 +6,18 @@ from .model import (
 import open3d as o3d
 from .rotation_utils import eulerAnglesToRotationMatrix
 
-
 # Convert the trimesh scene into open3d geometry
 def getOpen3DFromTrimeshScene(trimesh_scene, random_color=True):
     mesh = o3d.geometry.TriangleMesh()
+    geo_trans_mapping = {}
+    # Get the mapping between the geometry key and its corresponding transformation
+    for key in trimesh_scene.graph.nodes_geometry:
+        geo_trans_mapping[trimesh_scene.graph[key][1]] = trimesh_scene.graph[key][0]
+
     for key, geometry in trimesh_scene.geometry.items():
+        # Take the scene transformation into account
+        geometry.apply_transform(np.dot(trimesh_scene.graph["world"][0], geo_trans_mapping[key]))
+        # Convert the mesh into open3d
         temp_mesh = geometry.as_open3d
         if random_color:
             temp_mesh.paint_uniform_color(np.random.rand(3))

@@ -29,4 +29,7 @@ def lookAt(eye, target, up):
     camera2world = np.matmul(translation, rotation)
     world2camera = np.linalg.inv(camera2world)
 
+    # The above transformation is left-handed, but trimesh or pyrender uses right-handed
+    world2camera[1, :] *= -1
+
     return world2camera
