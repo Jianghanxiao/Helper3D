@@ -25,11 +25,9 @@ def lookAt(eye, target, up):
         -np.dot(forward, eye),
     ]
 
-    # Trimesh needs world2camera for its camera setting https://github.com/mikedh/trimesh/issues/447
-    camera2world = np.matmul(translation, rotation)
-    world2camera = np.linalg.inv(camera2world)
+    camera_pose = np.linalg.inv(np.matmul(translation, rotation))
 
     # The above transformation is left-handed, but trimesh or pyrender uses right-handed
-    world2camera[1, :] *= -1
+    camera_pose[1, :] *= -1
 
-    return world2camera
+    return camera_pose
