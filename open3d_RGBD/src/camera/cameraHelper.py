@@ -13,8 +13,8 @@ def getFocalLength(FOV, height, width=None):
         fy = fx / height * width
         return (fx, fy)
 
-
-def getCamera(transformation, fx, fy, cx, cy):
+# Currently this doesn't consider different fx and fy
+def getCamera(transformation, fx, fy, cx, cy, scale=1):
     # Return the camera and its corresponding frustum framework
     camera = o3d.geometry.TriangleMesh.create_coordinate_frame()
     camera.transform(transformation)
@@ -27,7 +27,7 @@ def getCamera(transformation, fx, fy, cx, cy):
     plane_points = [[-cy, -cx, -fx], [-cy, cx, -fx],
                     [cy, -cx, -fx], [cy, cx, -fx]]
     for point in plane_points:
-        point = list(np.array(point) / magnitude)
+        point = list(np.array(point) / magnitude * scale)
         temp_point = np.array(point + [1])
         points.append(np.dot(transformation, temp_point)[0:3])
     # Draw the camera framework
