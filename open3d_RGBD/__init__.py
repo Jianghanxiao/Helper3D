@@ -1,8 +1,8 @@
 from .src import (
     getFocalLength,
     getCamera,
-    get_pcd_from_rgbd,
-    get_arrow,
+    getPcdFromRgbd,
+    getArrow,
     BBX,
     getConventionTransform,
     getMotion,

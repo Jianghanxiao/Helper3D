@@ -1,6 +1,6 @@
 import numpy as np
 from .model import (
-    get_arrow,
+    getArrow,
     BBX,
 )
 import open3d as o3d
@@ -74,7 +74,7 @@ def getMotion(motion, transformation, state='current', is_real=False):
         np.array(motion[origin_name]) + np.array(motion[axis_name]))
     axis_point = np.dot(transformation, np.array(axis_point + [1]))[0:3]
 
-    arrow = get_arrow(origin=origin, end=axis_point, color=[0, 1, 1])
+    arrow = getArrow(origin=origin, end=axis_point, color=[0, 1, 1])
     # import pdb
     # pdb.set_trace()
     if not is_real:

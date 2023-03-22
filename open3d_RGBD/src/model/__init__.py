@@ -1,5 +1,5 @@
 from .pcdHelper import (
-    get_pcd_from_rgbd
+    getPcdFromRgbd
 )
-from .arrowHelper import get_arrow
+from .arrowHelper import getArrow
 from .bbxHelper import BBX

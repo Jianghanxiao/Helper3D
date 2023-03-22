@@ -2,7 +2,7 @@ import numpy as np
 import open3d as o3d
 
 # Get the point cloud from rgb and depth numpy array
-def get_pcd_from_rgbd(
+def getPcdFromRgbd(
     rgb,
     depth,
     fx=None,

@@ -4,7 +4,7 @@ import open3d as o3d
 import numpy as np
 
 
-def get_arrow(origin=[0, 0, 0], end=None, color=[0, 0, 0]):
+def getArrow(origin=[0, 0, 0], end=None, color=[0, 0, 0]):
     """
     Creates an arrow from an origin point to an end point,
     or create an arrow from a vector vec starting from origin.
@@ -21,13 +21,13 @@ def get_arrow(origin=[0, 0, 0], end=None, color=[0, 0, 0]):
         cylinder_radius=0.04,
     )
     mesh_arrow.paint_uniform_color(color)
-    rot_mat = caculate_align_mat(vec_Arr)
+    rot_mat = caculateAlignMat(vec_Arr)
     mesh_arrow.rotate(rot_mat, center=np.array([0, 0, 0]))
     mesh_arrow.translate(np.array(origin))
     return mesh_arrow
 
 
-def get_cross_prod_mat(pVec_Arr):
+def getCrossProdMat(pVec_Arr):
     # pVec_Arr shape (3)
     qCross_prod_mat = np.array([
         [0, -pVec_Arr[2], pVec_Arr[1]],
@@ -37,15 +37,15 @@ def get_cross_prod_mat(pVec_Arr):
     return qCross_prod_mat
 
 
-def caculate_align_mat(pVec_Arr):
+def caculateAlignMat(pVec_Arr):
     scale = np.linalg.norm(pVec_Arr)
     pVec_Arr = pVec_Arr / scale
     # must ensure pVec_Arr is also a unit vec.
     z_unit_Arr = np.array([0, 0, 1])
-    z_mat = get_cross_prod_mat(z_unit_Arr)
+    z_mat = getCrossProdMat(z_unit_Arr)
 
     z_c_vec = np.matmul(z_mat, pVec_Arr)
-    z_c_vec_mat = get_cross_prod_mat(z_c_vec)
+    z_c_vec_mat = getCrossProdMat(z_c_vec)
     if np.dot(z_unit_Arr, pVec_Arr) == -1:
         qTrans_Mat = -np.eye(3, 3)
     elif np.dot(z_unit_Arr, pVec_Arr) == 1:   

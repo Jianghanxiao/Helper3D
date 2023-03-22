@@ -3,8 +3,8 @@ from .camera import (
     getCamera, 
 )
 from .model import (
-    get_pcd_from_rgbd,
-    get_arrow,
+    getPcdFromRgbd,
+    getArrow,
     BBX,
 )
 from .utils import (
