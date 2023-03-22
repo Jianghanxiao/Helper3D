@@ -14,10 +14,13 @@ def getFocalLength(FOV, height, width=None):
         return (fx, fy)
 
 # Currently this doesn't consider different fx and fy
-def getCamera(transformation, fx, fy, cx, cy, scale=1):
+def getCamera(transformation, fx, fy, cx, cy, scale=1, coordinate=True, shoot=False, length=4, color=np.array([0, 1, 0])):
     # Return the camera and its corresponding frustum framework
-    camera = o3d.geometry.TriangleMesh.create_coordinate_frame()
-    camera.transform(transformation)
+    if coordinate:
+        camera = o3d.geometry.TriangleMesh.create_coordinate_frame(size=scale)
+        camera.transform(transformation)
+    else:
+        camera = o3d.geometry.TriangleMesh()
     # Add origin and four corner points in image plane
     points = []
     camera_origin = np.array([0, 0, 0, 1])
@@ -46,4 +49,15 @@ def getCamera(transformation, fx, fy, cx, cy, scale=1):
         lines=o3d.utility.Vector2iVector(lines),
     )
 
-    return [camera, line_set]
+    if shoot:
+        shoot_points = []
+        shoot_points.append(np.dot(transformation, camera_origin)[0:3])
+        shoot_points.append(np.dot(transformation, np.array([0, 0, -length, 1]))[0:3])
+        shoot_lines = [[0, 1]]
+        shoot_line_set = o3d.geometry.LineSet(
+            points=o3d.utility.Vector3dVector(shoot_points),
+            lines=o3d.utility.Vector2iVector(shoot_lines),
+        )
+        shoot_line_set.paint_uniform_color(color)
+
+    return [camera, line_set, shoot_line_set]
