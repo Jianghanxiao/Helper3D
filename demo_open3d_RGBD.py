@@ -1,10 +1,10 @@
 # This script is used to validate the image rendered is correct
-from Helper3D import (
-    getURDF,
+from open3d_RGBD import (
     getOpen3DFromTrimeshScene,
     getPcdFromRgbd,
     getCamera
 )
+from trimesh_URDF import getURDF
 import open3d as o3d
 import json
 import numpy as np

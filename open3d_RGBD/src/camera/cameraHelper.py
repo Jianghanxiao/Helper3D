@@ -49,6 +49,8 @@ def getCamera(transformation, fx, fy, cx, cy, scale=1, coordinate=True, shoot=Fa
         lines=o3d.utility.Vector2iVector(lines),
     )
 
+    meshes = [camera, line_set]
+
     if shoot:
         shoot_points = []
         shoot_points.append(np.dot(transformation, camera_origin)[0:3])
@@ -59,5 +61,6 @@ def getCamera(transformation, fx, fy, cx, cy, scale=1, coordinate=True, shoot=Fa
             lines=o3d.utility.Vector2iVector(shoot_lines),
         )
         shoot_line_set.paint_uniform_color(color)
-
-    return [camera, line_set, shoot_line_set]
+        meshes.append(shoot_line_set)
+    
+    return meshes

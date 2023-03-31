@@ -6,5 +6,8 @@ from .trimesh_render import (
 from .open3d_RGBD import (
     getOpen3DFromTrimeshScene,
     getPcdFromRgbd,
-    getCamera
+    getCamera,
+    getArrowMesh,
+    getSphereMesh,
+    getBoxMesh
 )

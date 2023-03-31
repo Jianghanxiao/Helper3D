@@ -4,12 +4,12 @@ from .camera import (
 )
 from .model import (
     getPcdFromRgbd,
-    getArrow,
-    BBX,
+    getSphereMesh,
+    getArrowMesh,
+    getBoxMesh
 )
 from .utils import (
     getConventionTransform,
-    getMotion,
     getOpen3DFromTrimeshScene
 )
 
