@@ -21,7 +21,7 @@ def getArrow(origin=[0, 0, 0], end=None, color=[0, 0, 0]):
         cylinder_radius=0.04,
     )
     mesh_arrow.paint_uniform_color(color)
-    rot_mat = caculateAlignMat(vec_Arr)
+    rot_mat = caculateAlignMat(vec_Arr / vec_len)
     mesh_arrow.rotate(rot_mat, center=np.array([0, 0, 0]))
     mesh_arrow.translate(np.array(origin))
     return mesh_arrow
