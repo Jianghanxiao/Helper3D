@@ -6,12 +6,14 @@ This repo is used to integrate some useful code snippets for 3D visualization us
     <td><img src="images/ex.png" alt="image1"></td>
     <td><img src="images/ex1.png" alt="image2"></td>
     <td><img src="images/ex2.png" alt="image3"></td>
+    <td><img src="images/ex3.png" alt="image3"></td>
   </tr>
 </table>
 
 
 ## Latest Update
-Trimesh URDF -> Support URDF into trimesh.Scene format; Support control the URDF with simple code (see example.py in trimesh_URDF)
+22.4.1 Get joint information in the world coordinate; Fix the lookAt function bug; Support motion update and improve the update function to lazy update to accelerate
+22.3.15? Trimesh URDF -> Support URDF into trimesh.Scene format; Support control the URDF with simple code (see example.py in trimesh_URDF)
 
 ## open3d_RGBD
 !! This project will be cleaned and restructured to have better codebase. Currently just use it as snippet
