@@ -36,8 +36,12 @@ if __name__ == "__main__":
     controller["link_3"].interact(np.pi/2)
     mesh = urdf.getMesh()
 
-
+    # Get the motion parameters in the world coordinate
+    urdf.updateMotionWorld()
+    for name, node in controller.items():
+        if node.joint is not None:
+            print(f"The joint in the world coordinate for {name}: origin {node.origin_world}, axis {node.axis_world}")
+    
     coordinate = trimesh.creation.axis(origin_size=0.1)
-    mesh.add_geometry(coordinate)
 
     mesh.show()
