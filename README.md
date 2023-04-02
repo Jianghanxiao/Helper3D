@@ -12,10 +12,10 @@ This repo is used to integrate some useful code snippets for 3D visualization us
 
 
 ## Latest Update
-22.4.1 
+[23.4.1] 
 Get joint information in the world coordinate; Fix the lookAt function bug; Support motion update and improve the update function to lazy update to accelerate
 
-22.3.15? 
+[23.3.15?] 
 Trimesh URDF -> Support URDF into trimesh.Scene format; Support control the URDF with simple code (see example.py in trimesh_URDF)
 
 ## open3d_RGBD
