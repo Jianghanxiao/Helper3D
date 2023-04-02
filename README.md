@@ -12,16 +12,16 @@ This repo is used to integrate some useful code snippets for 3D visualization us
 
 
 ## Latest Update
-22.4.1 Get joint information in the world coordinate; Fix the lookAt function bug; Support motion update and improve the update function to lazy update to accelerate
-22.3.15? Trimesh URDF -> Support URDF into trimesh.Scene format; Support control the URDF with simple code (see example.py in trimesh_URDF)
+22.4.1 
+Get joint information in the world coordinate; Fix the lookAt function bug; Support motion update and improve the update function to lazy update to accelerate
+
+22.3.15? 
+Trimesh URDF -> Support URDF into trimesh.Scene format; Support control the URDF with simple code (see example.py in trimesh_URDF)
 
 ## open3d_RGBD
-!! This project will be cleaned and restructured to have better codebase. Currently just use it as snippet
 This project is used to visualize the RGBD image in point cloud form using open3D. It involves the transformation from image -> camera coordinate -> world coordinate. 
 
 This part also provide some arrow helper to draw arrows in open3d.
-
-Feel free to make your personal design for the intrinsic and extrinsic transformations.
 
 ## trimesh_URDF
 This project is used to load URDF, visualize and intereact with it using simple code with Trimesh. It inolves a simple scene graph implemetation, a simple (may not contain all attributes) URDF parser and URDF tree constructor. (Check the `demo_RRDF.py` code to see how to play with it).
