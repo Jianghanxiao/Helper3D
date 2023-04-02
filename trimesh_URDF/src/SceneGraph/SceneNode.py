@@ -2,6 +2,7 @@ from .MeshNode import MeshNode
 import numpy as np
 import trimesh
 import open3d as o3d
+import copy
 
 
 class SceneNode:
@@ -17,33 +18,47 @@ class SceneNode:
         # Store the mesh and deal with functions draw the mesh based on the transform
         self.meshNode = MeshNode()
         self.joint = None
+        self.needUpdate = True
 
     def getInfo(self):
-        print(f"The joint info for {self.name}: {self.joint}\n")
+        return self.name, self.joint
+
+    def printInfo(self):
+        print(
+            f"The joint info for {self.name}: {self.joint} (joint in local coordinate)\n"
+        )
 
     def setParent(self, parent):
         if parent == None:
             raise RuntimeError("Invalid Parent: parent is not in the SceneNode type")
         self.parent = parent
         self.worldMatrix = np.dot(
-                self.parent.worldMatrix,
-                np.dot(self.interactMatrix, self.localTransform),
-            )
+            self.parent.worldMatrix,
+            np.dot(self.interactMatrix, self.localTransform),
+        )
 
-    def update(self):
-        # Update the worldMatrix of current scene node
-        if self.parent != None:
-            self.worldMatrix = np.dot(
-                self.parent.worldMatrix,
-                np.dot(self.interactMatrix, self.localTransform),
-            )
+    def updateMotionWorld(self):
+        # Update the motion parameters in the latest world coordinate
+        pass
+
+    def update(self, needUpdate=False):
+        if self.needUpdate or needUpdate:
+            # Update the worldMatrix of current scene node
+            if self.parent != None:
+                self.worldMatrix = np.dot(
+                    self.parent.worldMatrix,
+                    np.dot(self.interactMatrix, self.localTransform),
+                )
+            else:
+                self.worldMatrix = np.dot(self.interactMatrix, self.localTransform)
+            # Update the worldMatrix for all it children forcely
+            for child in self.children:
+                child.update(True)
+            self.needUpdate = False
         else:
-            self.worldMatrix = np.dot(
-                self.interactMatrix, self.localTransform
-            )
-        # Update the worldMatrix for all it children
-        for child in self.children:
-            child.update()
+            # Update the worldMatrix for all it children
+            for child in self.children:
+                child.update()
 
     def addChild(self, child):
         # child should also be SceneNode
@@ -71,7 +86,11 @@ class SceneNode:
 
     # Rotation is in degree, translation is in meter
     def interact(self, change):
-        if self.joint.joint_type != "revolute" and self.joint.joint_type != "prismatic" and self.joint.joint_type != "continuous":
+        if (
+            self.joint.joint_type != "revolute"
+            and self.joint.joint_type != "prismatic"
+            and self.joint.joint_type != "continuous"
+        ):
             print(
                 f"The joint type {self.joint.type} cannot be articualted or not supported yet"
             )
@@ -82,6 +101,7 @@ class SceneNode:
             self.translate(self.joint.origin["xyz"])
         if self.joint.joint_type == "prismatic":
             self.translate(self.joint.axis * change)
+        self.needUpdate = True
 
     def translate(self, translation):
         # translation should be in the array form np.arraay([float, float, float])
@@ -116,7 +136,7 @@ class SceneNode:
             ]
         )
         self.localTransform = np.dot(transMat, self.localTransform)
-    
+
     def rotateRPYLocal(self, rpy):
         # rpy in radian
         self.rotateLocal(np.array([1, 0, 0]), rpy[0])

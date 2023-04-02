@@ -7,7 +7,7 @@ import trimesh
 import io
 import os
 
-MODELID = "7265"
+MODELID = "13928"
 
 URDFPATH = f"/local-scratch/localhome/hja40/Desktop/Dataset/data/models3d/partnetsim/mobility_v1_alpha5/{MODELID}/mobility.urdf"
 OUTPUTDIR = "/local-scratch/localhome/hja40/Desktop/Research/proj-csopd/dataset"
@@ -25,10 +25,17 @@ def getRGB(scene):
 if __name__ == "__main__":
     urdf, controller = getURDF(URDFPATH, JointInfo=True)
 
-    # Interact with the URDF
-    controller["link_0"].interact(-0.5235987755982988)
 
+    # Interact with the URDF
+    controller["link_4"].interact(np.pi/2)
+    # mesh = urdf.getMesh()
+    controller["link_1"].interact(np.pi/2)
+    # mesh = urdf.getMesh()
+    controller["link_0"].interact(np.pi/2)
+    # mesh = urdf.getMesh()
+    controller["link_3"].interact(np.pi/2)
     mesh = urdf.getMesh()
+
 
     coordinate = trimesh.creation.axis(origin_size=0.1)
     mesh.add_geometry(coordinate)

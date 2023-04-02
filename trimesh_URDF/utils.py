@@ -22,6 +22,6 @@ def getURDF(path, JointInfo=False):
     # Get all the nodes
     controller = urdf.getNodes()
     if JointInfo:
-        urdf.getInfo()
+        urdf.printInfo()
 
     return urdf, controller

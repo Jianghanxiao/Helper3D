@@ -11,12 +11,17 @@ class SceneGraph:
     # Return all the nodes to control
     def getNodes(self):
         return self.controll_nodes
-    
-    # Print all the link information with associated joints
-    def getInfo(self):
-        for name, node in self.controll_nodes.items():
-            node.getInfo()
 
+    # Print all the link information with associated joints
+    def printInfo(self):
+        for name, node in self.controll_nodes.items():
+            node.printInfo()
+
+    # Update all motion parameters to the lastest world coordinate instead of local coordinate
+    # This need to be recalled after some joint may change because the joint may change, like the lamp
+    def updateMotionWorld(self):
+        self.update()
+        self.root.updateMotionWorld()
 
     def update(self):
         self.root.update()
@@ -29,7 +34,7 @@ class SceneGraph:
 
     def constructNode(self, node, link):
         node.name = link.link.link_name
-        self.controll_nodes[node.name] = node 
+        self.controll_nodes[node.name] = node
         node.joint = link.joint
         if node.joint != None:
             # Construct the joint node firstly; Deal with xyz and rpy of the node
@@ -58,4 +63,3 @@ class SceneGraph:
             child_node = SceneNode(node)
             node.addChild(child_node)
             self.constructNode(child_node, child)
-
