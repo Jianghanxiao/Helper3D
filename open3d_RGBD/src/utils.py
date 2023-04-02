@@ -2,7 +2,7 @@ import numpy as np
 import open3d as o3d
 
 # Convert the trimesh scene into open3d geometry
-def getOpen3DFromTrimeshScene(trimesh_scene, random_color=True):
+def getOpen3DFromTrimeshScene(trimesh_scene, random_color=True, color = np.array([1, 0, 0])):
     mesh = o3d.geometry.TriangleMesh()
     geo_trans_mapping = {}
     # Get the mapping between the geometry key and its corresponding transformation
@@ -17,6 +17,8 @@ def getOpen3DFromTrimeshScene(trimesh_scene, random_color=True):
         if random_color:
             temp_mesh.paint_uniform_color(np.random.rand(3))
         mesh += temp_mesh
+    if not random_color:
+        mesh.paint_uniform_color(color)
     return mesh   
 
 

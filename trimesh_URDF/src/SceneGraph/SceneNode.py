@@ -19,6 +19,7 @@ class SceneNode:
         self.meshNode = MeshNode()
         self.joint = None
         self.needUpdate = True
+        self.motionNeedUpdate = True
 
     def getInfo(self):
         return self.name, self.joint
@@ -37,9 +38,21 @@ class SceneNode:
             np.dot(self.interactMatrix, self.localTransform),
         )
 
-    def updateMotionWorld(self):
+    def updateMotionWorld(self, motionNeedUpdate=False):
         # Update the motion parameters in the latest world coordinate
-        pass
+        if (
+            not self.joint is None
+            and (self.motionNeedUpdate or motionNeedUpdate)
+        ):
+            # The origin has been in the joint coordinate
+            self.origin_world = self.worldMatrix[:3, 3]
+            self.axis_world = np.dot(self.worldMatrix[:3, :3], self.joint.axis)
+            for child in self.children:
+                child.updateMotionWorld(True)
+            self.motionNeedUpdate = False
+        else:
+            for child in self.children:
+                child.updateMotionWorld()
 
     def update(self, needUpdate=False):
         if self.needUpdate or needUpdate:
@@ -55,6 +68,7 @@ class SceneNode:
             for child in self.children:
                 child.update(True)
             self.needUpdate = False
+            self.motionNeedUpdate = True
         else:
             # Update the worldMatrix for all it children
             for child in self.children:
@@ -72,7 +86,7 @@ class SceneNode:
         self.meshNode.addMeshFile(mesh_file)
 
     def getMesh(self):
-        # Get the new mesh based on the world Matrix (Assume that the matrix has been updatated)
+        # Get the new mesh based on the world Matrix (Assume that the matrix has been updatated) and all mesh in the children node
         new_mesh = self.meshNode.getMesh(self.worldMatrix)
         if new_mesh != None:
             new_mesh = [new_mesh]
@@ -81,6 +95,15 @@ class SceneNode:
         # add mesh from all children
         for child in self.children:
             new_mesh += child.getMesh()
+        new_mesh = trimesh.scene.scene.append_scenes(new_mesh)
+        return new_mesh
+
+    def getControllerNodeMesh(self):
+        new_mesh = []
+        # add mesh from all children
+        for child in self.children:
+            if "_mesh:" in child.name:
+                new_mesh += child.getMesh()
         new_mesh = trimesh.scene.scene.append_scenes(new_mesh)
         return new_mesh
 
