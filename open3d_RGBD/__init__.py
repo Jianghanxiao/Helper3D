@@ -6,6 +6,7 @@ from .src import (
     getOpen3DFromTrimeshScene,
     getArrowMesh,
     getBoxMesh,
-    getSphereMesh
+    getSphereMesh,
+    getMotionMesh
 )
 

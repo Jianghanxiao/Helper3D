@@ -4,5 +4,6 @@ from .pcdHelper import (
 from .drawHelper import (
     getArrowMesh,
     getBoxMesh,
-    getSphereMesh
+    getSphereMesh,
+    getMotionMesh
 )

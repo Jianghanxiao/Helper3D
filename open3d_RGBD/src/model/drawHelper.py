@@ -2,6 +2,14 @@ import numpy as np
 import open3d as o3d
 
 
+# Return the mesh of the motion
+def getMotionMesh(motion_type, axis, origin, axis_color=[1, 0.84, 0], origin_color=[0.75, 0.75, 0.75]):
+    mesh = []
+    if motion_type == "revolute" or motion_type == "continuous":
+        mesh.append(getSphereMesh(origin, color=origin_color))
+    mesh.append(getArrowMesh(origin, origin + axis, color=axis_color))
+    return mesh
+
 def getSphereMesh(center, radius=0.1, color=[0, 0, 0]):
     sphere = o3d.geometry.TriangleMesh.create_sphere(radius=radius).translate(center)
     sphere.paint_uniform_color(color)

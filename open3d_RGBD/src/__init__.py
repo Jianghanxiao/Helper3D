@@ -6,7 +6,8 @@ from .model import (
     getPcdFromRgbd,
     getSphereMesh,
     getArrowMesh,
-    getBoxMesh
+    getBoxMesh,
+    getMotionMesh
 )
 from .utils import (
     getConventionTransform,

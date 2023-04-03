@@ -9,5 +9,6 @@ from .open3d_RGBD import (
     getCamera,
     getArrowMesh,
     getSphereMesh,
-    getBoxMesh
+    getBoxMesh,
+    getMotionMesh
 )
