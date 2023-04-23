@@ -1,5 +1,6 @@
 import numpy as np
 import open3d as o3d
+import copy
 
 # Convert the trimesh scene into open3d geometry
 def getOpen3DFromTrimeshScene(trimesh_scene, random_color=True, color = np.array([1, 0, 0])):
@@ -10,6 +11,8 @@ def getOpen3DFromTrimeshScene(trimesh_scene, random_color=True, color = np.array
         geo_trans_mapping[trimesh_scene.graph[key][1]] = trimesh_scene.graph[key][0]
 
     for key, geometry in trimesh_scene.geometry.items():
+        # Need to deepcopy, or it will influence the original mesh
+        geometry = copy.deepcopy(geometry)
         # Take the scene transformation into account
         geometry.apply_transform(np.dot(trimesh_scene.graph["world"][0], geo_trans_mapping[key]))
         # Convert the mesh into open3d
