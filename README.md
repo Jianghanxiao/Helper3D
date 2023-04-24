@@ -14,6 +14,8 @@ This repo is used to integrate some useful code snippets for 3D visualization us
 
 
 ## Latest Update
+[23.4.23] Add demo for rendering using pyrender and open3D. Extend lookAt function for different camera configs. Fix some copy potential problem when converting trimesh scene into open3D.
+
 [23.4.1] 
 Get joint information in the world coordinate; Fix the lookAt function bug; Support motion update and improve the update function to lazy update to accelerate
 
@@ -29,4 +31,10 @@ This part also provide some arrow helper to draw arrows in open3d.
 This project is used to load URDF, visualize and intereact with it using simple code with Trimesh. It inolves a simple scene graph implemetation, a simple (may not contain all attributes) URDF parser and URDF tree constructor. (Check the `demo_RRDF.py` code to see how to play with it).
 
 ## trimesh_render
-This codebase is just for easy rendering RGB with trimesh (But TBH, Pyrender is much easier to use and has more advanced functions)
+This codebase is just for easy rendering RGB with trimesh (But trimesh rendering is very slow, try to use pyrender)
+
+## pyrender_render
+This codebase is just for easy rendering RGB, depth, and all other information with pyrender
+
+## open3d_render
+This codebase is just for easy rendering RGB with open3d (depth is also supported, it's easy to get by checking the open3D documentation)
