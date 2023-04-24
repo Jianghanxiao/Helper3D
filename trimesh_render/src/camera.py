@@ -1,7 +1,7 @@
 import numpy as np
 
 # lookAt function implementation
-def lookAt(eye, target, up):
+def lookAt(eye, target, up, yz_flip=False):
     # Normalize the up vector
     up /= np.linalg.norm(up)
     forward = eye - target
@@ -24,6 +24,13 @@ def lookAt(eye, target, up):
         np.dot(new_up, eye),
         -np.dot(forward, eye),
     ]
+
+    if yz_flip:
+        # This is for different camera setting, like Open3D
+        rotation[1, :] *= -1
+        rotation[2, :] *= -1
+        translation[1, 3] *= -1
+        translation[2, 3] *= -1
 
     camera_pose = np.linalg.inv(np.matmul(translation, rotation))
 

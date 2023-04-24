@@ -10,7 +10,7 @@ import os
 MODELID = "7265"
 
 URDFPATH = f"/local-scratch/localhome/hja40/Desktop/Dataset/data/models3d/partnetsim/mobility_v1_alpha5/{MODELID}/mobility.urdf"
-OUTPUTDIR = "/local-scratch/localhome/hja40/Desktop/Research/proj-csopd/dataset"
+OUTPUTDIR = "/local-scratch/localhome/hja40/Desktop/Research/test"
 
 if not os.path.exists(OUTPUTDIR):
     os.mkdir(OUTPUTDIR)
