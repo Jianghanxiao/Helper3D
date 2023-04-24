@@ -1,6 +1,8 @@
 # Helper3D
 This repo is used to integrate some useful code snippets for 3D visualization using Open3D and URDF supporter using trimesh (open3d texture support is not good....). 
 
+(For Open3D, please don't use v0.17.0 (see [this](https://github.com/isl-org/Open3D/issues/6009)), which has some issue. v0.15.2 and v0.16.0 is good!)
+
 <table>
   <tr>
     <td><img src="images/ex.png" alt="image1"></td>
