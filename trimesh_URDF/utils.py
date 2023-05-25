@@ -24,14 +24,10 @@ def SampleSurfaceFromTrimeshScene(trimesh_scene, num_points):
         geometry = copy.deepcopy(geometry)
         # Take the scene transformation into account
         geometry.apply_transform(np.dot(trimesh_scene.graph["world"][0], geo_trans_mapping[key]))
-        # Check the number of points based on the area ratio of the whole trimesh scene
-        num_geo_points = int(geometry.area / trimesh_scene.area * num_points)
-        if num_geo_points == 0:
-            continue
+        # Check the number of points based on the area ratio of the whole trimesh scene, make sure there are some samples for each geometry
+        num_geo_points = max(int(geometry.area / trimesh_scene.area * num_points), 500)
         # Some geometry may not have texture uv
         if geometry.visual.material.image is None:
-            if (geometry.visual.material.main_color[:3]/255 == np.ones(3)).all():
-                continue
             result = trimesh.sample.sample_surface(geometry, num_geo_points, sample_color=False)
             colors.append(np.array([geometry.visual.material.main_color[:3] / 255] * num_geo_points))
         else:
