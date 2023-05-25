@@ -17,6 +17,12 @@ def SampleSurfaceFromTrimeshScene(trimesh_scene, num_points):
     points = []
     colors = []
     normals = []
+    # Calculate the are for the mesh with uv
+    total_area = 0
+    for key, geometry in trimesh_scene.geometry.items():
+        if geometry.visual.uv is not None:
+            total_area += geometry.area
+
     # Get the points from the geometries in the trimesh.Scene
     for key, geometry in trimesh_scene.geometry.items():
         # Need to deepcopy, or it will influence the original mesh
@@ -24,12 +30,10 @@ def SampleSurfaceFromTrimeshScene(trimesh_scene, num_points):
         # Take the scene transformation into account
         geometry.apply_transform(np.dot(trimesh_scene.graph["world"][0], geo_trans_mapping[key]))
         # Check the number of points based on the area ratio of the whole trimesh scene
-        num_geo_points = int(geometry.area / trimesh_scene.area * num_points)
+        num_geo_points = int(geometry.area / total_area * num_points)
         # Some geometry may not have texture uv
         if geometry.visual.uv is None:
             continue
-            result = trimesh.sample.sample_surface(geometry, num_geo_points, sample_color=False)
-            colors.append(np.zeros(result[0].shape))
         else:
             result = trimesh.sample.sample_surface(geometry, num_geo_points, sample_color=True)
             colors.append(np.array(result[2])[:, :3] / 255)
@@ -40,6 +44,9 @@ def SampleSurfaceFromTrimeshScene(trimesh_scene, num_points):
     points = np.concatenate(points, axis=0)
     colors = np.concatenate(colors, axis=0)
     normals = np.concatenate(normals, axis=0)
+    
+    import pdb
+    pdb.set_trace()
 
     return points, colors, normals
 
