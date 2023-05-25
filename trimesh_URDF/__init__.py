@@ -1,1 +1,1 @@
-from .utils import getURDF
+from .utils import getURDF, SampleSurfaceFromTrimeshScene
