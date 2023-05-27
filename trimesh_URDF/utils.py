@@ -27,7 +27,7 @@ def SampleSurfaceFromTrimeshScene(trimesh_scene, num_points):
         # Check the number of points based on the area ratio of the whole trimesh scene, make sure there are some samples for each geometry
         num_geo_points = max(int(geometry.area / trimesh_scene.area * num_points), 500)
         # Some geometry may not have texture uv
-        if geometry.visual.material.image is None:
+        if geometry.visual.uv is None:
             result = trimesh.sample.sample_surface(geometry, num_geo_points, sample_color=False)
             colors.append(np.array([geometry.visual.material.main_color[:3] / 255] * num_geo_points))
         else:
