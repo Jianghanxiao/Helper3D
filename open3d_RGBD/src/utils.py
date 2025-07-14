@@ -16,7 +16,10 @@ def getOpen3DFromTrimeshScene(trimesh_scene, random_color=True, color = np.array
         # Take the scene transformation into account
         geometry.apply_transform(np.dot(trimesh_scene.graph["world"][0], geo_trans_mapping[key]))
         # Convert the mesh into open3d
-        temp_mesh = geometry.as_open3d
+        temp_mesh = o3d.geometry.TriangleMesh(
+            vertices=o3d.utility.Vector3dVector(np.asarray(geometry.vertices)),
+            triangles=o3d.utility.Vector3iVector(np.asarray(geometry.faces))
+        )
         if random_color:
             temp_mesh.paint_uniform_color(np.random.rand(3))
         mesh += temp_mesh

@@ -10,8 +10,8 @@ import json
 
 MODELID = "7265"
 
-URDFPATH = f"/local-scratch/localhome/hja40/Desktop/Dataset/data/models3d/partnetsim/mobility_v1_alpha5/{MODELID}/mobility.urdf"
-OUTPUTDIR = "/local-scratch/localhome/hja40/Desktop/Research/proj-csopd/dataset"
+URDFPATH = f"/Users/shawn/Desktop/dataset/partnetsim/mobility_v1_alpha5/{MODELID}/mobility.urdf"
+OUTPUTDIR = "data"
 
 IMGSIZE = 512
 

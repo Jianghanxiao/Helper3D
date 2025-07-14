@@ -10,8 +10,8 @@ import json
 import numpy as np
 
 MODELID = "7265"
-URDFPATH = f"/local-scratch/localhome/hja40/Desktop/Dataset/data/models3d/partnetsim/mobility_v1_alpha5/{MODELID}/mobility.urdf"
-DATAPATH = f"/local-scratch/localhome/hja40/Desktop/Research/proj-csopd/dataset/{MODELID}"
+URDFPATH = f"/Users/shawn/Desktop/dataset/partnetsim/mobility_v1_alpha5/{MODELID}/mobility.urdf"
+DATAPATH = f"/Users/shawn/Desktop/Helper3D/data/{MODELID}"
 INDEX = "0"
 
 if __name__ == "__main__":

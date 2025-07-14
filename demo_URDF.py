@@ -10,10 +10,6 @@ import os
 MODELID = "13928"
 
 URDFPATH = f"/local-scratch/localhome/hja40/Desktop/Dataset/data/models3d/partnetsim/mobility_v1_alpha5/{MODELID}/mobility.urdf"
-OUTPUTDIR = "/local-scratch/localhome/hja40/Desktop/Research/proj-csopd/dataset"
-
-if not os.path.exists(OUTPUTDIR):
-    os.mkdir(OUTPUTDIR)
 
 
 def getRGB(scene):
