@@ -1,7 +1,6 @@
 import numpy as np
 import open3d as o3d
 
-# Get the point cloud from rgb and depth numpy array
 def getPcdFromRgbd(
     rgb,
     depth,
@@ -12,6 +11,7 @@ def getPcdFromRgbd(
     intrinsic=None,
     depth_scale=1,
     alpha_filter=False,
+    is_opengl=True
 ):
     # Make the rgb go to 0-1
     if rgb.max() > 1:
@@ -19,33 +19,36 @@ def getPcdFromRgbd(
     # Convert the unit to meter
     depth /= depth_scale
 
-    height, width = np.shape(depth)
-    points = []
-    colors = []
+    if intrinsic is None:
+        intrinsic = np.array([
+            [fx, 0, cx],
+            [0, fy, cy],
+            [0, 0, 1]
+        ])
 
-    for y in range(height):
-        for x in range(width):
-            if alpha_filter:
-                # Filter the background based on the alpha channel
-                if rgb[y][x][3] != 1:
-                    continue
-            colors.append(rgb[y][x][:3])
-            if fx != None:
-                points.append(
-                    [
-                        (x - cx) * (depth[y][x] / fx),
-                        -(y - cy) * (depth[y][x] / fy),
-                        -depth[y][x],
-                    ]
-                )
-            else:
-                depth[y][x] *= -1
-                old_point = np.array([(width - x) * depth[y][x], y * depth[y][x], depth[y][x], 1])
-                point = np.dot(np.linalg.inv(intrinsic), old_point)
-                points.append(point[:3])
+    H, W = depth.shape
+    x, y = np.meshgrid(np.arange(W), np.arange(H))
+    x = x.reshape(-1)
+    y = y.reshape(-1)
+    depth = depth.reshape(-1)
+    points = np.stack([x, y, np.ones_like(x)], axis=1)
+    points = points * depth[:, None]
+
+    intrinsic = intrinsic[:3, :3]
+    points = points @ np.linalg.inv(intrinsic).T
+
+    if is_opengl:
+        # Convert from opencv convention to opengl convention
+        points[:, 1] *= -1 
+        points[:, 2] *= -1
+
+    if alpha_filter:
+        mask = rgb[:, :, 3] == 1
+        mask = mask.reshape(-1)
+    rgb = rgb[:, :, :3].reshape(-1, 3)
 
     pcd = o3d.geometry.PointCloud()
-    pcd.points = o3d.utility.Vector3dVector(np.array(points))
-    pcd.colors = o3d.utility.Vector3dVector(np.array(colors)[:, 0:3])
+    pcd.points = o3d.utility.Vector3dVector(points[mask])
+    pcd.colors = o3d.utility.Vector3dVector(rgb[mask])
 
     return pcd
