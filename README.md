@@ -13,6 +13,9 @@ This repo is used to integrate some useful code snippets for 3D visualization us
 </table>
 
 
+## TODO
+[25.7.14] Rewrite the readme and examples to demonstrate how to use the library
+
 ## Latest Update
 [23.4.23] Add demo for rendering using pyrender and open3D. Extend lookAt function for different camera configs. Fix some copy potential problem when converting trimesh scene into open3D.
 
